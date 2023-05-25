@@ -5,7 +5,6 @@ export default function Frame_UI() {
   return (
     <div className=" text-left">
       <Aside_Sildebar></Aside_Sildebar>
-      
     </div>
   );
 }

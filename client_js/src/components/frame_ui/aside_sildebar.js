@@ -1,40 +1,39 @@
-import React, { useState } from "react";
-import Content from "./content";
-
+import React, { useState, useEffect } from "react";
 import Menu_item_ml10 from "./menu_item_ml10";
 import Menu_item_ml64 from "./menu_item_ml64";
+import "./css/styles.css";
 
 export default function Aside_Sildebar() {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prevState) => {
+      const nextState = !prevState;
+      sessionStorage.setItem("isOpen", JSON.stringify(nextState));
+      return nextState;
+    });
   };
+
+  useEffect(() => {
+    const storedIsOpen = sessionStorage.getItem("isOpen");
+    if (storedIsOpen !== null) {
+      setIsOpen(JSON.parse(storedIsOpen));
+    }
+  }, []);
+
   return (
     <div>
       <div
-        className={`bg-white  h-screen w-64 border-r border-gray-200 fixed top-0 left-0 z-40 transition-all duration-300 transform ${
-          isOpen ? "-translate-x-48" : "translate-x-0 "
+        className={`bg-white h-screen w-64 border-r border-gray-200 fixed top-0 left-0 z-40 transition-all duration-300 transform ${
+          isOpen ? "-translate-x-48" : "translate-x-0"
         }`}
       >
-        {isOpen ? (
-          <Menu_item_ml10 isOpen={isOpen} />
-        ) : (
-          <Menu_item_ml64 idOpen={isOpen} />
-        )}
-
+        {isOpen ? <Menu_item_ml10 /> : <Menu_item_ml64 />}
         <div
-          className="h-full w-4 absolute top-0 right-0 -mr-4 cursor-pointer"
+          className={`corner-line rounded-s-2xl ${isOpen ? "expanded" : ""}`}
           onClick={toggleSidebar}
         ></div>
       </div>
-      <section
-        className={`ml-10 transition-all duration-300 ${
-          isOpen ? " ml-10 px-5" : "ml-64"
-        }`}
-      >
-        <Content />
-      </section>
     </div>
   );
 }

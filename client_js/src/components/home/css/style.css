@@ -1,0 +1,28 @@
+.scrollable-content {
+    overflow: auto;
+    order: 2;
+}
+
+/* Ẩn thanh cuộn */
+.scroll-container {
+    scrollbar-width: thin;
+    /* Điều chỉnh độ rộng của thanh cuộn */
+    scrollbar-color: transparent transparent;
+    /* Màu của thanh cuộn */
+
+}
+
+.scroll-container::-webkit-scrollbar {
+    width: 0.5rem;
+    /* Điều chỉnh độ rộng của thanh cuộn */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    /* Màu của thanh cuộn */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background-color: transparent;
+    /* Màu nền của vùng thanh cuộn */
+}

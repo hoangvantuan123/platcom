@@ -7,7 +7,7 @@ export default function Content() {
       <div className="container px-4 ">
         {/* Content inside the section */}
         <div className="grid grid-cols-1 gap-y-8  lg:items-center lg:gap-x-16  m-auto">
-          <h1 className="text-3xl font-extrabold sm:text-5xl">Content</h1>
+          {/*  viết content ở đây  */}
          
         </div>
       </div>
