@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Commentdiv from "./comment";
+import Tree_comment from "./tree_comment";
 export default function Onclick_status() {
   const [isHeartClicked, setIsHeartClicked] = useState(false);
   const [isBookmarkClicked, setIsBookmarkClicked] = useState(false);
@@ -93,6 +94,9 @@ export default function Onclick_status() {
       {isCommentmarkClicked && (
         <div className="my-8">
           <Commentdiv />
+          <div className="mt-3">
+            <Tree_comment />
+          </div>
         </div>
       )}
     </div>

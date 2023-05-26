@@ -26,3 +26,12 @@
     background-color: transparent;
     /* Màu nền của vùng thanh cuộn */
 }
+
+
+.custom-calendar {
+    /* CSS tùy chỉnh cho phần tử bao bọc */
+}
+
+.custom-calendar-inner {
+    /* CSS tùy chỉnh cho Calendar */
+}

@@ -15,7 +15,7 @@ const comments = [
       author: {
         name: "Jacob Warnhalter",
         image:
-          "https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
+          "https://images.unsplash.com/photo-1684997337065-c3cec79184e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=699&q=80",
       },
     },
     // Thêm các comment khác vào đây

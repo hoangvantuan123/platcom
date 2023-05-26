@@ -6,6 +6,7 @@ export default function Commentdiv() {
   const [comment, setComment] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [emoji, setEmoji] = useState("");
+  const [emojiData] = useState(data);
 
   const handleChange = (event) => {
     setComment(event.target.value);
@@ -25,6 +26,7 @@ export default function Commentdiv() {
 
   const handleSelectEmoji = (selectedEmoji) => {
     setEmoji(selectedEmoji.native);
+    setComment(comment + selectedEmoji.native);
   };
 
   const displayComment = comment + emoji;
@@ -44,7 +46,7 @@ export default function Commentdiv() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="h-6 w-6 text-gray-600"
+                  className="h-5 w-5 text-gray-600"
                 >
                   <path
                     strokeLinecap="round"
@@ -60,7 +62,7 @@ export default function Commentdiv() {
               placeholder="Add a comment!"
               value={displayComment}
               onChange={handleChange}
-              className="w-full  font-normal text-sm  focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-100 rounded-md py-3"
+              className="w-full  font-normal text-sm  focus:outline-none rounded-3xl border border-gray-100 bg-white p-2 shadow-sm transition hover:shadow-lg  pl-12 py-3"
             />
             <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
               <button
@@ -72,7 +74,7 @@ export default function Commentdiv() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="h-6 w-6 text-gray-600"
+                  className="h-5 w-5 text-gray-600"
                 >
                   <path
                     strokeLinecap="round"
@@ -91,7 +93,7 @@ export default function Commentdiv() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="h-6 w-6 text-gray-600"
+                  className="h-5 w-5 text-gray-600"
                 >
                   <path
                     strokeLinecap="round"
@@ -117,7 +119,7 @@ export default function Commentdiv() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  className="h-6 w-6 text-gray-600"
+                  className="h-5 w-5 text-gray-600"
                 >
                   <path
                     strokeLinecap="round"
@@ -136,13 +138,14 @@ export default function Commentdiv() {
                 type="submit"
                 className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-[#6332FD]  focus:outline-none"
               >
+                
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="h-6 w-6 ml-2 transdiv rotate-90"
+                  id="Outline"
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5 ml-2 transdiv opacity-80"
                 >
-                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                  <path d="M23.119.882a2.966,2.966,0,0,0-2.8-.8l-16,3.37a4.995,4.995,0,0,0-2.853,8.481L3.184,13.65a1,1,0,0,1,.293.708v3.168a2.965,2.965,0,0,0,.3,1.285l-.008.007.026.026A3,3,0,0,0,5.157,20.2l.026.026.007-.008a2.965,2.965,0,0,0,1.285.3H9.643a1,1,0,0,1,.707.292l1.717,1.717A4.963,4.963,0,0,0,15.587,24a5.049,5.049,0,0,0,1.605-.264,4.933,4.933,0,0,0,3.344-3.986L23.911,3.715A2.975,2.975,0,0,0,23.119.882ZM4.6,12.238,2.881,10.521a2.94,2.94,0,0,1-.722-3.074,2.978,2.978,0,0,1,2.5-2.026L20.5,2.086,5.475,17.113V14.358A2.978,2.978,0,0,0,4.6,12.238Zm13.971,7.17a3,3,0,0,1-5.089,1.712L11.762,19.4a2.978,2.978,0,0,0-2.119-.878H6.888L21.915,3.5Z" />
                 </svg>
               </button>
             </div>
@@ -151,7 +154,7 @@ export default function Commentdiv() {
       </form>
       {showEmojiPicker && (
         <Picker
-          data={data}
+          data={emojiData}
           /* onEmojiSelect={console.log} */
           onSelect={handleSelectEmoji}
           style={{ position: "absolute", bottom: "60px", right: "10px" }}

@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Container,
-  Grid,
   SimpleGrid,
   Skeleton,
   useMantineTheme,
@@ -9,11 +8,16 @@ import {
 } from "@mantine/core";
 import "./css/style.css";
 import Post from "../post";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import RadioGroupRating from "./radio_group_rating";
+import Clock from "./clock";
+import Calendar_UI from "./calendar";
 
-const PRIMARY_COL_HEIGHT = rem(400);
 const Home_UI = React.memo(() => {
   const theme = useMantineTheme();
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - ${theme.spacing.md} / 2)`;
+
   return (
     <div className="max-w-full items-center justify-center px-3">
       <Container my="lg" className=" max-w-full mt-0 mb-0">
@@ -25,96 +29,72 @@ const Home_UI = React.memo(() => {
         >
           <div
             xs={8}
-            className="h-screen overflow-auto scrollable-content flex-1 overflow-y-auto scroll-container pt-2"
+            className="h-screen overflow-auto scrollable-content flex-1 overflow-y-auto scroll-container pt-2 "
           >
             <Post />
-            <h1>
-              Lorem Lorem Ips orem ipsum dolor sit amet, consectetur adipiscing
-              elit. Sed gravida eros vel dolor ullamcorper, vel elementum tortor
-              aliquet. Donec euismod lacinia turpis vitae hendrerit. Quisque
-              varius efficitur risus, a sagittis risus mattis et. Lorem Lorem
-              Ips orem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              gravida eros vel dolor ullamcorper, vel elementum tortor aliquet.
-              Donec euismod lacinia turpis vitae hendrerit. Quisque varius
-              efficitur risus, a sagittis risus mattis et. Lorem Lorem Ips orem
-              ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida
-              eros vel dolor ullamcorper, vel elementum tortor aliquet. Donec
-              euismod lacinia turpis vitae hendrerit. Quisque varius efficitur
-              risus, a sagittis risus mattis et. Lorem Lorem Ips orem ipsum
-              dolor sit amet, consectetur adipiscing elit. Sed gravida eros vel
-              dolor ullamcorper, vel elementum tortor aliquet. Donec euismod
-              lacinia turpis vitae hendrerit. Quisque varius efficitur risus, a
-              sagittis risus mattis et. Lorem Lorem Ips orem ipsum dolor sit
-              amet, consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et. Lorem Lorem Ips orem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et. Lorem Lorem Ips orem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et. Lorem Lorem Ips orem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et. Lorem Lorem Ips orem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et. Lorem Lorem Ips orem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et. Lorem Lorem Ips orem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et. Lorem Lorem Ips orem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et. Lorem Lorem Ips orem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed gravida eros vel dolor
-              ullamcorper, vel elementum tortor aliquet. Donec euismod lacinia
-              turpis vitae hendrerit. Quisque varius efficitur risus, a sagittis
-              risus mattis et.
-            </h1>
+            <Post />
+            <Post />
           </div>
-          <div className="pt-2">
-            <Grid gutter="md">
-              <Grid.Col>
-                <div
-                  style={{
-                    height: SECONDARY_COL_HEIGHT,
-                    borderRadius: rem(8),
-                    background: "#f0f0f0",
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100vh",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+            }}
+          >
+            <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                lg={4}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
+                <Grid
+                  item
+                  spacing={2}
+                  sx={{
+                    height: "100%",
+                    flex: 1,
+                    flexDirection: { xs: "column", sm: "row" },
                   }}
-                ></div>
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <div
-                  style={{
-                    height: SECONDARY_COL_HEIGHT,
-                    borderRadius: rem(8),
-                    background: "#f0f0f0",
-                  }}
-                ></div>
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <div
-                  style={{
-                    height: SECONDARY_COL_HEIGHT,
-                    borderRadius: rem(8),
-                    background: "#f0f0f0",
-                  }}
-                  className="h-full"
-                ></div>
-              </Grid.Col>
+                >
+                  <div className="h-full flex flex-1">
+                    <div className="flex flex-col justify-between">
+                      <div className="">
+                        <RadioGroupRating className="w-full" />
+                      </div>
+                      <div className="pt-3 items-center justify-center">
+                        <Clock />
+                      </div>
+                    </div>
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md={6} lg={8}>
+                <div className="h-full w-full bg-gray-200 rounded-md mb-4">
+                  <Calendar_UI />
+                </div>
+              </Grid>
+              <Grid item xs={12} md={6} lg={8}>
+                <div className="h-full w-full bg-gray-200 rounded-md mb-4">
+                  3
+                </div>
+              </Grid>
+              <Grid item xs={12} md={6} lg={4}>
+                <div className="h-full w-full bg-gray-200 rounded-md mb-4">
+                  4
+                </div>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <div className="w-full h-full bg-gray-200 rounded-md mb-4">
+                  5
+                </div>
+              </Grid>
             </Grid>
-          </div>
+          </Box>
         </SimpleGrid>
       </Container>
     </div>

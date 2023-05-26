@@ -1,12 +1,12 @@
 import React from "react";
 import Tree_comment from "./tree_comment";
-import Avatar_post from "./avatar";
+import Avatar_post from "./avatar_post";
 import Onclick_status from "./onclick_status";
 import CommentForm from "./comment";
 
 const Post = () => {
   return (
-    <div className="max-w-2xl mx-auto  rounded-lg border border-gray-100 bg-white p-2 shadow-sm transition hover:shadow-lg ">
+    <div className="max-w-2xl mx-auto mb-3 rounded-lg border border-gray-100 bg-white p-2 shadow-sm transition hover:shadow-lg ">
       <div>
         <Avatar_post />
       </div>

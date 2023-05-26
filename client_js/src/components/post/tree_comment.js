@@ -1,50 +1,51 @@
 import React from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Tree } from "antd";
+import Avatar_Comment from "./avatar_comment";
 
 const treeData = [
   {
-    title: "parent 1",
+    title:"Xem Thêm" ,
     key: "0-0",
     children: [
       {
-        title: "parent 1-0",
+        title: <Avatar_Comment/>,
         key: "0-0-0",
         children: [
           {
-            title: "leaf",
+            title: <Avatar_Comment/>,
             key: "0-0-0-0",
           },
           {
-            title: "leaf",
+            title: <Avatar_Comment/>,
             key: "0-0-0-1",
           },
           {
-            title: "leaf",
+            title: <Avatar_Comment/>,
             key: "0-0-0-2",
           },
         ],
       },
       {
-        title: "parent 1-1",
+        title: <Avatar_Comment/>,
         key: "0-0-1",
         children: [
           {
-            title: "leaf",
+            title: <Avatar_Comment/>,
             key: "0-0-1-0",
           },
         ],
       },
       {
-        title: "parent 1-2",
+        title: <Avatar_Comment/>,
         key: "0-0-2",
         children: [
           {
-            title: "leaf",
+            title: <Avatar_Comment/>,
             key: "0-0-2-0",
           },
           {
-            title: "leaf",
+            title: <Avatar_Comment/>,
             key: "0-0-2-1",
           },
         ],
