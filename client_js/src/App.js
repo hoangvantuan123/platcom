@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Chat_UI from "./components/chat";
 import Frame_UI from "./components/frame_ui";
 import Home_UI from "./components/home";
@@ -18,16 +18,12 @@ const Wrapper = React.memo(({ children, showForm }) => {
 
   return (
     <>
-      <div className="mx-auto max-w-screen-xl px-4  sm:px-6 lg:px-8 ">
         {showForm && <Frame_UI />}
         <div
-          className={` transition-all duration-300 ${
-            showForm ? " px-5" : ""
-          }`}
+          className={` transition-all duration-300 ${showForm ? " px-5" : ""}`}
         >
           {children}
         </div>
-      </div>
     </>
   );
 });

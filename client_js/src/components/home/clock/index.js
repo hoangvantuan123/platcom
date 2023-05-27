@@ -27,10 +27,10 @@ export default function Clock() {
   }, []);
 
   return (
-    <div className=" flex flex-col p-2 rounded-lg w-full border border-gray-100 bg-white shadow-sm transition">
-      <h1 className="text-lg font-bold mb-4">{time}</h1>
-      <p className="text-lg">{date}</p>
+    <div className=" ">
       <p className="text-xl">{dayOfWeek}</p>
+      <p className=" text-sm mt-7">{date}</p>
+      <h1 className=" text-4xl font-medium opacity-75 mb-4">{time}</h1>
     </div>
   );
 }

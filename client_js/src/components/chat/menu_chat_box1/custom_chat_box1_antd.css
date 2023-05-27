@@ -1,0 +1,16 @@
+.ant-menu .ant-menu-sub .ant-menu-inline {
+    background: none;
+}
+
+.css-dev-only-do-not-override-w8mnev.ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline,
+.css-dev-only-do-not-override-w8mnev.ant-menu-light>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+    background: none;
+}
+
+.css-dev-only-do-not-override-w8mnev.ant-menu-light.ant-menu-root.ant-menu-inline,
+.css-dev-only-do-not-override-w8mnev.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-inline,
+.css-dev-only-do-not-override-w8mnev.ant-menu-light.ant-menu-root.ant-menu-vertical,
+.css-dev-only-do-not-override-w8mnev.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-vertical {
+  /* CSS tùy chỉnh của bạn */
+  border-inline-end: none;
+}

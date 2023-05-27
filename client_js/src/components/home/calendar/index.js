@@ -1,55 +1,49 @@
 import React, { useEffect, useRef } from "react";
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
-
-
-const events = [{ title: "Meeting", start: new Date() }];
+import { Calendar } from "@fullcalendar/core";
+import listPlugin from "@fullcalendar/list";
+import styled from "styled-components";
+import eventsData from "./events.json";
+import CustomCalendar  from "./custom-calendar";
 
 const Calendar_UI = () => {
   const calendarRef = useRef(null);
 
-  // Hàm callback sau khi nạp thành công lịch
-  const handleCalendarLoad = () => {
-    
-    // Tùy chỉnh giao diện
-    const calendarApi = calendarRef.current.getApi();
+  useEffect(() => {
+    const calendarEl = calendarRef.current;
 
-    // Xoá HeaderToolbar
-    calendarApi.setOption("headerToolbar", false);
-    // Đặt màu sắc sự kiện
-    calendarApi.setOption("eventColor", "red");
-
-    // Đặt kích thước chữ cho tiêu đề sự kiện
-    calendarApi.setOption("eventTitleFontSize", 14);
-
-    // Đặt màu nền cho tiêu đề tháng
-    calendarApi.setOption("headerToolbar", {
-      left: "prev,next today",
-      center: "title",
-      right: "timeGridWeek,timeGridDay",
+    const calendar = new Calendar(calendarEl, {
+      timeZone: "UTC",
+      views: {
+        listDay: {
+          buttonText: "list day",
+          titleFormat: {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          },
+        },
+      },
+      headerToolbar: null,
+      initialView: "listDay",
+      weekNumbers: true,
+      dayMaxEvents: true,
+      events: eventsData,
+      plugins: [listPlugin],
+      locale: "en",
+     
     });
+    calendar.render();
 
-    // Đặt màu sắc nền cho các ngày cuối tuần
-    calendarApi.setOption("dayCellDidMount", (arg) => {
-      const { date } = arg;
-      const day = date.getDay();
-
-      if (day === 0 || day === 6) {
-        arg.el.style.backgroundColor = "lightgray";
-      }
-    });
-  };
+    return () => {
+      calendar.destroy();
+    };
+  }, []);
 
   return (
-    <div>
-      <FullCalendar
-        ref={calendarRef}
-        plugins={[timeGridPlugin]}
-        initialView="timeGridDay"
-        hiddenDays={[0, 6]}
-        events={events}
-        onLoad={handleCalendarLoad}
-      />
+    <div className="">
+      <div className="container h-full  ">
+        <CustomCalendar ref={calendarRef} />
+      </div>
     </div>
   );
 };

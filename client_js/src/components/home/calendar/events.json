@@ -1,0 +1,15 @@
+[
+    {
+      "title": "Meeting",
+      "start": "2023-05-27T14:30:00",
+      "extendedProps": {
+        "status": "done"
+      }
+    },
+    {
+      "title": "Birthday Party",
+      "start": "2023-05-27T07:00:00"
+  
+    }
+  ]
+  

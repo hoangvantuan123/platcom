@@ -1,50 +1,40 @@
-import React, { useEffect, useRef, useState } from "react";
-import FullCalendar from "@fullcalendar/react";
+import React, { useEffect, useRef } from "react";
+import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-
-const events = [{ title: "Meeting", start: new Date() }];
-// a custom render function
-function renderEventContent(eventInfo) {
-  return (
-    <>
-      <b>{eventInfo.timeText}</b>
-      <i>{eventInfo.event.title}</i>
-    </>
-  );
-}
+import listPlugin from '@fullcalendar/list';
+import "./css/style.css"
 export default function Calendar_UI() {
   const calendarRef = useRef(null);
-  const [currentView, setCurrentView] = useState("dayGridMonth");
 
-  const handleMonthViewClick = () => {
-    setCurrentView("dayGridMonth");
-    calendarRef.current.getApi().changeView("dayGridMonth");
-  };
+  useEffect(() => {
+    const calendarEl = calendarRef.current;
 
-  const handleWeekViewClick = () => {
-    setCurrentView("timeGridWeek");
-    calendarRef.current.getApi().changeView("timeGridWeek");
-  };
+    const calendar = new Calendar(calendarEl, {
+      timeZone: "UTC",
+      themeSystem: "bootstrap5",
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
+      },
+      weekNumbers: true,
+      dayMaxEvents: true,
+      events: "https://fullcalendar.io/api/demo-feeds/events.json",
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
+      locale: "en", // Đặt ngôn ngữ mặc định là 
+    });
 
-  const handleDayViewClick = () => {
-    setCurrentView("timeGridDay");
-    calendarRef.current.getApi().changeView("timeGridDay");
-  };
+    calendar.render();
+
+    return () => {
+      calendar.destroy();
+    };
+  }, []);
   return (
-    <div className="flex flex-col">
-      <div className="gap-3">
-        <button onClick={handleMonthViewClick}>Tháng</button>
-        <button onClick={handleWeekViewClick}>Tuần</button>
-        <button onClick={handleDayViewClick}>Ngày</button>
-      </div>
-      <FullCalendar
-        ref={calendarRef}
-        plugins={[dayGridPlugin, timeGridPlugin]}
-        initialView={currentView}
-        events={events}
-        eventContent={renderEventContent}
-      />
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">My Calendar</h1>
+      <div ref={calendarRef} />
     </div>
   );
 }
