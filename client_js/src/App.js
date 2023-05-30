@@ -20,7 +20,7 @@ const Wrapper = React.memo(({ children, showForm }) => {
     <>
         {showForm && <Frame_UI />}
         <div
-          className={` transition-all duration-300 ${showForm ? " px-5" : ""}`}
+          className={` transition-all duration-300 ${showForm ? "" : ""}`}
         >
           {children}
         </div>

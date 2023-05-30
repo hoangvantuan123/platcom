@@ -1,0 +1,18 @@
+/* Thanh đường thẳng nhỏ */
+/* styles.css */
+.corner-line {
+    position: absolute;
+    top: 13px;
+    right: 0;
+    width: 4px;
+    height: 1cm;
+    /* Điều chỉnh độ dài thành đường thẳng ở đây */
+    background-color: rgb(173, 172, 172);
+    /* Màu sắc của thành đường thẳng */
+    transform-origin: top right;
+    transform: rotate(0deg);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    border-radius: 20px;
+
+}

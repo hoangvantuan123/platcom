@@ -1,16 +1,41 @@
 .ant-menu .ant-menu-sub .ant-menu-inline {
-    background: none;
+  background: none;
 }
 
 .css-dev-only-do-not-override-w8mnev.ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline,
 .css-dev-only-do-not-override-w8mnev.ant-menu-light>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
-    background: none;
+  background: none;
 }
 
 .css-dev-only-do-not-override-w8mnev.ant-menu-light.ant-menu-root.ant-menu-inline,
-.css-dev-only-do-not-override-w8mnev.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-inline,
+.css-dev-only-do-not-override-w8mnev.ant-menu-light>.ant-menu.ant-menu-root.ant-menu-inline,
 .css-dev-only-do-not-override-w8mnev.ant-menu-light.ant-menu-root.ant-menu-vertical,
-.css-dev-only-do-not-override-w8mnev.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-vertical {
+.css-dev-only-do-not-override-w8mnev.ant-menu-light>.ant-menu.ant-menu-root.ant-menu-vertical {
   /* CSS tùy chỉnh của bạn */
   border-inline-end: none;
 }
+
+.ant-menu-submenu-title {
+  padding-left: 20px !important;
+}
+
+.ant-menu-item.ant-menu-item-only-child {
+  padding-left: 30px !important;
+}
+
+:where(.css-dev-only-do-not-override-w8mnev).ant-menu-inline .ant-menu-item:not(:last-child),
+:where(.css-dev-only-do-not-override-w8mnev).ant-menu-vertical .ant-menu-item:not(:last-child) {
+  margin-bottom: 0px;
+}
+
+.ant-menu-title-content {
+  display: flex;
+  align-items: center;
+  gap: 0 10px;
+}
+
+.ant-menu-item-custom .anticon {
+  margin-right: 8px;
+}
+
+

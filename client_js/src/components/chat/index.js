@@ -5,18 +5,18 @@ import Menu_chat_box1 from "./menu_chat_box1";
 import Chat_box2 from "./chat_box2";
 const Chat_UI = React.memo(() => {
   return (
-    <div className="ml-10 ">
+    <div className="ml-14 ">
       <Grid container>
         <Grid item xs={2}>
-          <div className="h-screen border-e bg-white overflow-auto scrollable-content px-1 overflow-y-auto scroll-container pt-2">
-            <div className="p-2">
+          <div className="h-screen border-e bg-white overflow-auto scrollable-content pl-2 overflow-y-auto scroll-container pt-2">
+            <div className="">
               <Menu_chat_box1 />
             </div>
           </div>
         </Grid>
         <Grid item xs={10}>
-          <div className="h-screen overflow-auto scrollable-content px-1 overflow-y-auto scroll-container pt-2">
-            <div className="p-2">
+          <div className="h-screen overflow-auto scrollable-content overflow-y-auto scroll-container ">
+            <div className="">
               <Chat_box2 />
             </div>
           </div>
