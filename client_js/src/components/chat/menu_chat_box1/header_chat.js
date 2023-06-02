@@ -3,7 +3,7 @@ import Edit_Menu from "./edit_menu";
 
 export default function Header_chat() {
   return (
-    <div className="flex justify-between items-center pl-2">
+    <div className="flex justify-between items-center pl-2  pt-1 border-b">
       <div>
         <h3 className="text-2xl opacity-80 ">Messages</h3>
         <span className=" text-xs  font-semibold opacity-60">128 online</span>

@@ -16,3 +16,45 @@
     border-radius: 20px;
 
 }
+/* Ẩn thanh cuộn */
+.scroll-container {
+    scrollbar-width: thin;
+    /* Điều chỉnh độ rộng của thanh cuộn */
+    scrollbar-color: transparent transparent;
+    /* Màu của thanh cuộn */
+
+}
+
+.scroll-container::-webkit-scrollbar {
+    width: 0.5rem;
+    /* Điều chỉnh độ rộng của thanh cuộn */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    /* Màu của thanh cuộn */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background-color: transparent;
+    /* Màu nền của vùng thanh cuộn */
+}
+
+/* Thanh đường thẳng nhỏ */
+/* styles.css */
+.corner-line {
+    position: absolute;
+    top: 13px;
+    right: 0;
+    width: 4px;
+    height: 1cm;
+    /* Điều chỉnh độ dài thành đường thẳng ở đây */
+    background-color: rgb(173, 172, 172);
+    /* Màu sắc của thành đường thẳng */
+    transform-origin: top right;
+    transform: rotate(0deg);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    
+}
+

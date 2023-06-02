@@ -16,7 +16,7 @@ export default function Menu_item_ml10() {
   };
   return (
     <div className="flex h-screen w-16 flex-col justify-between border-e bg-white transform translate-x-48 overflow-x-hidden">
-      <div className=" flex-1 overflow-y-auto scroll-container">
+      <div className=" flex-1 overflow-y-auto scroll-container pt-1">
         <div>
           <div className="inline-flex h-16 w-16 items-center justify-center">
             <span className="grid h-10 w-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">

@@ -15,7 +15,7 @@ const Chat_UI = React.memo(() => {
           </div>
         </Grid>
         <Grid item xs={10}>
-          <div className="h-screen overflow-auto scrollable-content overflow-y-auto scroll-container ">
+          <div className="">
             <div className="">
               <Chat_box2 />
             </div>

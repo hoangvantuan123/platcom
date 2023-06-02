@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import QuiltedImageList from "./images_file_dialog";
 
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -47,7 +48,7 @@ export default function Tabs_Diaglog_Files() {
   };
 
   return (
-    <Box sx={{ padding: 0, width: "100%" }}>
+      <Box sx={{ padding: 0, width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider", padding: 0 }}>
         <Tabs
           value={value}
@@ -68,6 +69,6 @@ export default function Tabs_Diaglog_Files() {
       <TabPanel value={value} index={2}>
         Item Three
       </TabPanel>
-    </Box>
+    </Box>    
   );
 }
