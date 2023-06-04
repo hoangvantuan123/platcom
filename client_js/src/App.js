@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Job_UI from "./components/job";
 import File_UI from "./components/file";
 import Calendar_UI from "./components/calendar";
+import Login from "./components/acc_user/login";
 
 /* 
 `Wrapper` để bọc và kiểm soát việc hiển thị của `Frame_UI`.  truyền prop `showForm` vào trong `Wrapper` 
@@ -18,12 +19,10 @@ const Wrapper = React.memo(({ children, showForm }) => {
 
   return (
     <>
-        {showForm && <Frame_UI />}
-        <div
-          className={` transition-all duration-300 ${showForm ? "" : ""}`}
-        >
-          {children}
-        </div>
+      {showForm && <Frame_UI />}
+      <div className={` transition-all duration-300 ${showForm ? "" : ""}`}>
+        {children}
+      </div>
     </>
   );
 });
@@ -34,6 +33,7 @@ function App() {
     <div>
       <Router>
         <Routes>
+          <Route path="/login" element={<Login/>}/>
           <Route
             path="/"
             element={
