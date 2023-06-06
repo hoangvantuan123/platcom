@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['id', 'username', 'email', 'password', 'created_at', 'updated_at']
+        fields = ['id', 'username', 'email', 'password', 'domainAddress', 'employeeCount', 'firstName', 'lastName', 'phone','emailContact', 'businessAddress','created_at', 'updated_at']
 
     def validate_password(self, value):
         return make_password(value)

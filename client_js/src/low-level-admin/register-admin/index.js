@@ -1,4 +1,4 @@
-import * as React from "react";
+import  React, {useState} from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -6,6 +6,8 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Frame_box1 from "./frame_box1";
+import Frame_box2 from "./frame_box2";
+import Frame_box3 from "./frame_box3";
 
 const steps = [
   {
@@ -13,17 +15,44 @@ const steps = [
     content: "Content for Select campaign settings",
   },
   {
-    label: "Create an ad group",
+    label: <Frame_box2 />,
     content: "Content for Create an ad group",
   },
   {
-    label: "Create an ad",
+    label: <Frame_box3 />,
     content: "Content for Create an ad",
   },
 ];
 
 export default function Register_admin() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [domainAddress, setDomainAddress] = useState("");
+  const [employeeCount, setEmployeeCount] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailContact, setEmailContact] = useState("");
+  const [businessAddress, setBusinessAddress] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+   
+    const userData = {
+      username: username, // 1. Tên Doanh nghiệp 
+      email: email, // 3. Thư điện tử
+      password: password, // 3 Mật Khâu
+      domainAddress: domainAddress, // 1 Địa chỉ miền
+      employeeCount: employeeCount, // 1 Số Lượng nhân viên
+      firstName: firstName, // 2 Tên
+      lastName: lastName, // 2 Họ
+      phone: phone, // 2 Số điện thoại
+      emailContact: emailContact, // 2 Email liên hệ 
+      businessAddress: businessAddress, // 2 Địa chỉ doanh nghiệp
+    };
+    //dispatch(registerUser(userData));
+  };
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);

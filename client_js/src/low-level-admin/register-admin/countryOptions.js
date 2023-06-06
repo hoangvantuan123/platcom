@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
+
 export default function CountryOptions() {
   const [data, setData] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -47,19 +48,19 @@ export default function CountryOptions() {
       ...provided,
       display: "flex",
       alignItems: "center",
+      height: "46px",
+      borderColor: "#EFF0F3",
     }),
   };
   return (
-    <div>
-      <Select
-        options={data}
-        value={selectedCountry}
-        onChange={handleSelectChange}
-        getOptionLabel={(option) => option.name}
-        getOptionValue={(option) => option.code}
-        formatOptionLabel={formatOptionLabel}
-        styles={customStyles}
-      />
-    </div>
+    <Select
+      options={data}
+      value={selectedCountry}
+      onChange={handleSelectChange}
+      getOptionLabel={(option) => option.name}
+      getOptionValue={(option) => option.code}
+      formatOptionLabel={formatOptionLabel}
+      styles={customStyles}
+    />
   );
 }
