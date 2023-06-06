@@ -7,6 +7,8 @@ import Job_UI from "./components/job";
 import File_UI from "./components/file";
 import Calendar_UI from "./components/calendar";
 import Login from "./components/acc_user/login";
+import RegisterForm from "./low-level-admin";
+import Register_admin from "./low-level-admin/register-admin";
 
 /* 
 `Wrapper` để bọc và kiểm soát việc hiển thị của `Frame_UI`.  truyền prop `showForm` vào trong `Wrapper` 
@@ -33,7 +35,9 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login/>}/>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/register_admin" element={<Register_admin />} />
           <Route
             path="/"
             element={
