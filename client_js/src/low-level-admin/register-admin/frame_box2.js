@@ -1,9 +1,28 @@
 import * as React from "react";
 import FormLabel from "@mui/material/FormLabel";
 import CountryOptions from "./countryOptions";
-export default function Frame_box2() {
-  //Sử dụng thư viện npm install material-ui-phone-number --save
-  const [phone, setPhone] = React.useState("");
+export default function Frame_box2({
+  setFirstName,
+  setLastName,
+  setPhone,
+  setEmailContact,
+  setBusinessAddress,
+}) {
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value);
+  };
+  const handleLastNameChange = (e) => {
+    setLastName(e.target.value);
+  };
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
+  };
+  const handleEmailContactChange = (e) => {
+    setEmailContact(e.target.value);
+  };
+  const handleBusinessAddressChange = (e) => {
+    setBusinessAddress(e.target.value);
+  };
 
   return (
     <div className="mx-auto max-w-screen-xl px-4  sm:px-6 lg:px-8">
@@ -29,6 +48,7 @@ export default function Frame_box2() {
               type="name"
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="Hoang"
+              onChange={handleFirstNameChange}
             />
           </div>
         </div>
@@ -46,6 +66,7 @@ export default function Frame_box2() {
               type="text"
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="Tuan"
+              onChange={handleLastNameChange}
             />
           </div>
         </div>
@@ -63,6 +84,7 @@ export default function Frame_box2() {
               type="name"
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="example@platcom.vn"
+              onChange={handleEmailContactChange}
             />
           </div>
           <div className="w-1/2">
@@ -78,6 +100,7 @@ export default function Frame_box2() {
               type="name"
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="123-45-678"
+              onChange={handlePhoneChange}
             />
           </div>
         </div>
@@ -96,6 +119,7 @@ export default function Frame_box2() {
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="123 Main Street, City, State, ZIP Code
               "
+              onChange={handleBusinessAddressChange}
             />
           </div>
         </div>

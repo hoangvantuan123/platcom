@@ -13,9 +13,15 @@ import {
   Stack,
 } from "@mantine/core";
 
-export default function Frame_box3() {
+export default function Frame_box3({ setEmail, setPassword }) {
   const [type, toggle] = useToggle(["login", "register"]);
   const [showPassword, setShowPassword] = useState(false);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
   const form = useForm({
     initialValues: {
       email: "",
@@ -56,16 +62,16 @@ export default function Frame_box3() {
                 id="email"
                 placeholder="hello@mantine.dev"
                 value={form.values.email}
-                onChange={(event) =>
-                  form.setFieldValue("email", event.currentTarget.value)
-                }
+                onChange={(event) => {
+                  form.setFieldValue("email", event.currentTarget.value);
+                  handleEmailChange(event);
+                }}
                 className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               />
               {form.errors.email && <div className="error">Invalid email</div>}
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -97,9 +103,10 @@ export default function Frame_box3() {
                 id="password"
                 placeholder="Your password"
                 value={form.values.password}
-                onChange={(event) =>
-                  form.setFieldValue("password", event.currentTarget.value)
-                }
+                onChange={(event) => {
+                  form.setFieldValue("password", event.currentTarget.value);
+                  handlePasswordChange(event);
+                }}
                 className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               />
               <span className="absolute inset-y-0 end-0 grid place-content-center px-4">

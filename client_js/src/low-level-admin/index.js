@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../slices/userSlice";
-
 const RegisterForm = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");

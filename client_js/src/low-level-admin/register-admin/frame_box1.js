@@ -1,11 +1,45 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-export default function Frame_box1() {
-  
+export default function Frame_box1({
+  setDomainAddress,
+  setEmployeeCount,
+  setUsername,
+  domainAddress,
+  employeeCount,
+}) {
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+  const handleDomainAddressChange = (e) => {
+    setDomainAddress(e.target.value);
+  };
+  const handleEmployeeCountChange = (e) => {
+    const selectedValue = e.target.value;
+    let parsedValue;
+
+    switch (selectedValue) {
+      case "10":
+        parsedValue = 10;
+        break;
+      case "50":
+        parsedValue = 50;
+        break;
+      case "100":
+        parsedValue = 100;
+        break;
+      default:
+        parsedValue = null;
+        break;
+    }
+
+    setEmployeeCount(parsedValue);
+    // Thực hiện các xử lý khác tại đây (nếu cần)
+  };
+
   return (
     <div className="mx-auto max-w-screen-xl px-4  sm:px-6 lg:px-8">
       <div className="mx-auto max-w-lg text-center">
@@ -32,6 +66,7 @@ export default function Frame_box1() {
               type="name"
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="PlatCom"
+              onChange={handleUsernameChange}
             />
           </div>
         </div>
@@ -49,6 +84,7 @@ export default function Frame_box1() {
               type="text"
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="PlatCom.vn"
+              onChange={handleDomainAddressChange}
             />
           </div>
         </div>
@@ -64,32 +100,36 @@ export default function Frame_box1() {
             </FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="1-10"
+              defaultValue="10"
               name="radio-buttons-group"
             >
               <FormControlLabel
-                value="1-10"
+                value="10"
                 control={<Radio />}
                 label="1-10 employees"
                 className=" opacity-80"
+                onChange={handleEmployeeCountChange}
               />
               <FormControlLabel
-                value="11-50"
+                value="50"
                 control={<Radio />}
                 label="11-50 employees"
                 className=" opacity-80"
+                onChange={handleEmployeeCountChange}
               />
               <FormControlLabel
-                value="51-100"
+                value="100"
                 control={<Radio />}
                 label="51-100 employees"
                 className=" opacity-80"
+                onChange={handleEmployeeCountChange}
               />
               <FormControlLabel
-                value="101-500"
+                value="500"
                 control={<Radio />}
                 label="101-500 employees"
                 className=" opacity-80"
+                onChange={handleEmployeeCountChange}
               />
             </RadioGroup>
           </FormControl>

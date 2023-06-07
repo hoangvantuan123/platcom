@@ -1,4 +1,4 @@
-import  React, {useState} from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -8,23 +8,11 @@ import Typography from "@mui/material/Typography";
 import Frame_box1 from "./frame_box1";
 import Frame_box2 from "./frame_box2";
 import Frame_box3 from "./frame_box3";
-
-const steps = [
-  {
-    label: <Frame_box1 />,
-    content: "Content for Select campaign settings",
-  },
-  {
-    label: <Frame_box2 />,
-    content: "Content for Create an ad group",
-  },
-  {
-    label: <Frame_box3 />,
-    content: "Content for Create an ad",
-  },
-];
+import { useDispatch } from "react-redux";
+import { registerUser } from "../../slices/userSlice";
 
 export default function Register_admin() {
+  const dispatch = useDispatch();
   const [activeStep, setActiveStep] = React.useState(0);
   const [domainAddress, setDomainAddress] = useState("");
   const [employeeCount, setEmployeeCount] = useState("");
@@ -36,11 +24,58 @@ export default function Register_admin() {
   const [businessAddress, setBusinessAddress] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const steps = [
+    {
+      label: (
+        <Frame_box1
+          username={username}
+          domainAddress={domainAddress}
+          employeeCount={employeeCount}
+          
+          setUsername={setUsername}
+          setDomainAddress={setDomainAddress}
+          setEmployeeCount={setEmployeeCount}
+        />
+      ),
+      content: "Content for Select campaign settings",
+    },
+    {
+      label: (
+        <Frame_box2
+          firstName={firstName}
+          lastName={lastName}
+          emailContact={emailContact}
+          phone={phone}
+          businessAddress={businessAddress}
+          setFirstName={setFirstName}
+          setLastName={setLastName}
+          setPhone={setPhone}
+          setEmailContact={setEmailContact}
+          setBusinessAddress={setBusinessAddress}
+        />
+      ),
+      content: "Content for Create an ad group",
+    },
+    {
+      label: (
+        <Frame_box3
+          email={email}
+          password={password}
+          setEmail={setEmail}
+          setPassword={setPassword}
+        />
+      ),
+      content: "Content for Create an ad",
+    },
+  ];
+  console.log("steps", steps);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-   
+
     const userData = {
-      username: username, // 1. Tên Doanh nghiệp 
+      username: username, // 1. Tên Doanh nghiệp
       email: email, // 3. Thư điện tử
       password: password, // 3 Mật Khâu
       domainAddress: domainAddress, // 1 Địa chỉ miền
@@ -48,10 +83,10 @@ export default function Register_admin() {
       firstName: firstName, // 2 Tên
       lastName: lastName, // 2 Họ
       phone: phone, // 2 Số điện thoại
-      emailContact: emailContact, // 2 Email liên hệ 
+      emailContact: emailContact, // 2 Email liên hệ
       businessAddress: businessAddress, // 2 Địa chỉ doanh nghiệp
     };
-    //dispatch(registerUser(userData));
+    dispatch(registerUser(userData));
   };
 
   const handleNext = () => {
@@ -103,7 +138,9 @@ export default function Register_admin() {
                 </button>
               )}
               <button
-                onClick={handleNext}
+                onClick={
+                  activeStep === steps.length - 1 ? handleSubmit : handleNext
+                }
                 className="inline-block rounded-lg border hover:bg-slate-100 px-7 py-3 text-sm font-medium text-black opacity-80"
               >
                 {activeStep === steps.length - 1 ? "Finish" : "Next"}
