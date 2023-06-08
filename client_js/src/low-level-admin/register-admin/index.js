@@ -10,9 +10,11 @@ import Frame_box2 from "./frame_box2";
 import Frame_box3 from "./frame_box3";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function Register_admin() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const [domainAddress, setDomainAddress] = useState("");
   const [employeeCount, setEmployeeCount] = useState("");
@@ -24,7 +26,7 @@ export default function Register_admin() {
   const [businessAddress, setBusinessAddress] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState("");
   const steps = [
     {
       label: (
@@ -32,7 +34,6 @@ export default function Register_admin() {
           username={username}
           domainAddress={domainAddress}
           employeeCount={employeeCount}
-          
           setUsername={setUsername}
           setDomainAddress={setDomainAddress}
           setEmployeeCount={setEmployeeCount}
@@ -69,11 +70,26 @@ export default function Register_admin() {
       content: "Content for Create an ad",
     },
   ];
-  console.log("steps", steps);
+  // console.log("steps", steps);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    // Kiểm tra điều kiện các giá trị trước khi tiếp tục
+    if (
+      !username ||
+      !email ||
+      !password ||
+      !domainAddress ||
+      !employeeCount ||
+      !firstName ||
+      !lastName ||
+      !phone ||
+      !emailContact ||
+      !businessAddress
+    ) {
+      alert("Vui lòng điền đầy đủ thông tin");
+      return; // Dừng hàm nếu có giá trị không hợp lệ
+    }
     const userData = {
       username: username, // 1. Tên Doanh nghiệp
       email: email, // 3. Thư điện tử
@@ -86,7 +102,29 @@ export default function Register_admin() {
       emailContact: emailContact, // 2 Email liên hệ
       businessAddress: businessAddress, // 2 Địa chỉ doanh nghiệp
     };
-    dispatch(registerUser(userData));
+    // Thiết lập biến trạng thái để kiểm tra việc gửi thành công
+    let requestSuccess = false;
+
+    try {
+      if (requestSuccess) {
+        alert("Gửi không thành công. Vui lòng thử lại sau.");
+      } else {
+        // Gửi yêu cầu đăng ký người dùng
+        await dispatch(registerUser(userData));
+        // Xử lý logic khi thành công
+        // Ví dụ: Hiển thị thông báo thành công và chuyển hướng đến trang mới
+        alert("Đăng ký thành công!");
+        // Chuyển hướng đến trang mới
+        requestSuccess = true;
+        navigate("/new-page");
+        // Đánh dấu yêu cầu thành công
+      }
+    } catch (error) {
+      // Xử lý logic khi có lỗi
+      setError(error.message);
+      // Hiển thị thông báo lỗi
+      alert("Gửi không thành công. Vui lòng thử lại sau.");
+    }
   };
 
   const handleNext = () => {

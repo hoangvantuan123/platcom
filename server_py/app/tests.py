@@ -1,3 +1,8 @@
-from django.test import TestCase
-
-# Create your tests here.
+   
+      
+""" 
+{ 
+"email": "tuanvhoang31@gmail.com ", 
+  "password": "1234567890"
+}
+   """ 

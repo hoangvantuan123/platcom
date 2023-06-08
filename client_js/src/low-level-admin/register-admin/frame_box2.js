@@ -7,6 +7,11 @@ export default function Frame_box2({
   setPhone,
   setEmailContact,
   setBusinessAddress,
+  firstName ,
+  lastName,
+  phone ,
+  emailContact ,
+  businessAddress 
 }) {
   const handleFirstNameChange = (e) => {
     setFirstName(e.target.value);
@@ -49,6 +54,7 @@ export default function Frame_box2({
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="Hoang"
               onChange={handleFirstNameChange}
+              value={firstName}
             />
           </div>
         </div>
@@ -67,6 +73,7 @@ export default function Frame_box2({
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="Tuan"
               onChange={handleLastNameChange}
+              value={lastName}
             />
           </div>
         </div>
@@ -85,6 +92,7 @@ export default function Frame_box2({
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="example@platcom.vn"
               onChange={handleEmailContactChange}
+              value={emailContact}
             />
           </div>
           <div className="w-1/2">
@@ -101,6 +109,7 @@ export default function Frame_box2({
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="123-45-678"
               onChange={handlePhoneChange}
+              value={phone}
             />
           </div>
         </div>
@@ -120,6 +129,7 @@ export default function Frame_box2({
               placeholder="123 Main Street, City, State, ZIP Code
               "
               onChange={handleBusinessAddressChange}
+              value={businessAddress}
             />
           </div>
         </div>

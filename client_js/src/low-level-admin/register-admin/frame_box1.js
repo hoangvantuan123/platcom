@@ -10,7 +10,9 @@ export default function Frame_box1({
   setUsername,
   domainAddress,
   employeeCount,
+  username,
 }) {
+  
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -67,6 +69,7 @@ export default function Frame_box1({
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="PlatCom"
               onChange={handleUsernameChange}
+              value={username} // Thêm giá trị vào trường input
             />
           </div>
         </div>
@@ -85,6 +88,7 @@ export default function Frame_box1({
               className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
               placeholder="PlatCom.vn"
               onChange={handleDomainAddressChange}
+              value={domainAddress} // Thêm giá trị vào trường input
             />
           </div>
         </div>
@@ -100,8 +104,8 @@ export default function Frame_box1({
             </FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="10"
               name="radio-buttons-group"
+              value={employeeCount}
             >
               <FormControlLabel
                 value="10"

@@ -13,7 +13,7 @@ import {
   Stack,
 } from "@mantine/core";
 
-export default function Frame_box3({ setEmail, setPassword }) {
+export default function Frame_box3({ setEmail, setPassword, email, password }) {
   const [type, toggle] = useToggle(["login", "register"]);
   const [showPassword, setShowPassword] = useState(false);
   const handleEmailChange = (e) => {
@@ -42,7 +42,8 @@ export default function Frame_box3({ setEmail, setPassword }) {
   const handleTogglePassword = () => {
     setShowPassword((prevState) => !prevState);
   };
-
+  const emailValue = form.values.email || email;
+  const passwordValue = form.values.password || password;
   return (
     <Paper className="mx-auto max-w-lg px-4 py-16 sm:px-6 lg:px-8">
       <form onSubmit={form.onSubmit(() => {})}>
@@ -61,7 +62,7 @@ export default function Frame_box3({ setEmail, setPassword }) {
                 type="email"
                 id="email"
                 placeholder="hello@mantine.dev"
-                value={form.values.email}
+                value={emailValue}
                 onChange={(event) => {
                   form.setFieldValue("email", event.currentTarget.value);
                   handleEmailChange(event);
@@ -102,7 +103,7 @@ export default function Frame_box3({ setEmail, setPassword }) {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder="Your password"
-                value={form.values.password}
+                value={passwordValue}
                 onChange={(event) => {
                   form.setFieldValue("password", event.currentTarget.value);
                   handlePasswordChange(event);
