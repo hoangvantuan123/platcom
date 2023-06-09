@@ -30,6 +30,8 @@ export const loginAdmin = (email, password) => async (dispatch) => {
       password,
     });
     if (response.status === 200) {
+      // lưu thông tin người dùng và localstoage
+      localStorage.setItem('user_info', JSON.stringify(response.data));
       dispatch(loginSuccess(response.data));
       return response.data; // Trả về dữ liệu nếu cần
     } else {

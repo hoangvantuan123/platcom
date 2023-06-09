@@ -1,0 +1,14 @@
+{
+    "id": 1,
+    "username": "backenddata",
+    "email": "user@gmail.com",
+    "domainAddress": ".platcotest44",
+    "employeeCount": 13,
+    "firstName": "Tuan",
+    "lastName": "Hoang",
+    "phone": "0377 092166",
+    "emailContact": "test3@gmail.com",
+    "businessAddress": "Nam S\u01a1n, B\u1eafc Ninh",
+    "created_at": "2023-06-09T05:58:26.313751Z",
+    "updated_at": "2023-06-09T05:58:26.746795Z"
+}

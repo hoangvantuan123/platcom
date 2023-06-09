@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register_admin() {
   const dispatch = useDispatch();
+  console.log("dispatch", dispatch);
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const [domainAddress, setDomainAddress] = useState("");

@@ -1,30 +1,19 @@
-import bcrypt
+import requests
 
-# Mật khẩu không mã hoá cụ thể
-password = 'mypass123'
+def get_url_info(url):
+    try:
+        response = requests.post(url)
+        response.raise_for_status()  # Kiểm tra lỗi trong response
+        data = response.json()  # Giả sử API trả về dữ liệu dạng JSON
+        # Xử lý dữ liệu ở đây
+        return data
+    except requests.exceptions.RequestException as e:
+        print(f"Lỗi: Không thể lấy thông tin từ URL. {e}")
+        return None
 
-# Mật khẩu đã được mã hoá (được cung cấp)
-hashed_password = b'$2b$12$dsHpJLJV.zNQFK9eR4Hx.eg2awww4sRBf08ft.xUl97ILl0wKj.b.'
+# Sử dụng hàm để lấy thông tin từ URL cụ thể
+url = "http://localhost:8000/api/login/"
+url_info = get_url_info(url)
 
-# Kiểm tra mật khẩu
-is_match = bcrypt.checkpw(password.encode('utf-8'), hashed_password)
-
-if is_match:
-    print("Mật khẩu hợp lệ!")
-else:
-    print("Mật khẩu không hợp lệ!")
-import bcrypt
-
-# Mật khẩu không mã hoá cụ thể
-password = 'mypass123'
-
-# Mật khẩu đã được mã hoá (được cung cấp)
-hashed_password = b'$2b$12$9f42NvwPjCp7F4qds2KS1OT7GYlpZhpvUkL9ICaSCS5MSMiXAWBD6'
-
-# Kiểm tra mật khẩu
-is_match = bcrypt.checkpw(password.encode('utf-8'), hashed_password)
-
-if is_match:
-    print("Mật khẩu hợp lệ!")
-else:
-    print("Mật khẩu không hợp lệ!")
+if url_info:
+    print(url_info)

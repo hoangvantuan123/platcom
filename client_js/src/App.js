@@ -10,6 +10,7 @@ import Login from "./components/acc_user/login";
 import Register_admin from "./low-level-admin/register-admin";
 import Login_admin from "./low-level-admin/login-admin";
 import Home_admin_panel from "./low-level-admin/components-admin-panel";
+import Frame_UI_admin_panel from "./low-level-admin/components-admin-panel/frame_ui_admin_panel";
 
 /* 
 `Wrapper` để bọc và kiểm soát việc hiển thị của `Frame_UI`.  truyền prop `showForm` vào trong `Wrapper` 
@@ -29,6 +30,20 @@ const Wrapper = React.memo(({ children, showForm }) => {
     </>
   );
 });
+const WrapperAdmins = React.memo(({ children, showForm }) => {
+  useEffect(() => {
+    // Cập nhật khi showFormadmin thay đổi
+  }, [showForm]);
+
+  return (
+    <>
+      {showForm && <Frame_UI_admin_panel />}
+      <div className={` transition-all duration-300 ${showForm ? "" : ""}`}>
+        {children}
+      </div>
+    </>
+  );
+});
 
 function App() {
   const showForm = true;
@@ -42,7 +57,16 @@ function App() {
             element={<Register_admin />}
           />
           <Route path="/admin/admin-panel/login" element={<Login_admin />} />
-          <Route path="/admin-panel/home" element={<Home_admin_panel />} />
+          {/*  <Route path="/admin-panel/home" element={<Home_admin_panel />} /> */}
+          <Route
+            path="/admin-panel/home"
+            element={
+              <WrapperAdmins showForm={showForm}>
+                {" "}
+                <Home_admin_panel />
+              </WrapperAdmins>
+            }
+          />
           <Route
             path="/"
             element={

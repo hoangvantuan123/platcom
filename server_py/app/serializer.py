@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import check_password
 from django.db import connection
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
+from sqlalchemy import text
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -56,9 +56,28 @@ class LoginSerializer(serializers.Serializer):
             if session.is_active:
                 attrs['user'] = user
                 attrs['db_connection'] = 'Kết nối cơ sở dữ liệu thành công'
+                # Tạo bảng trong cơ sở dữ liệu con
+                #with session.begin():
+                    #session.execute(text("""
+                        #CREATE TABLE IF NOT EXISTS my_table (
+                            #id SERIAL PRIMARY KEY,
+                            #name VARCHAR(255) NOT NULL
+                   
+                        #)
+                        #"""))
+                # Thêm các câu truy vấn khác tạo bảng và cấu trúc dữ liệu khác trong cơ sở dữ liệu con
                 session.close()
                 return attrs
             else:
                 raise serializers.ValidationError('Không thể kết nối đến cơ sở dữ liệu con')
         else:
             raise serializers.ValidationError('Vui lòng cung cấp cả email và mật khẩu')
+    def to_representation(self, instance):
+        user = instance['user']
+        user_info = {
+            'id': str(user.id),
+            'username': user.username,
+            'email': user.email,
+            # Các thông tin khác của tài khoản
+        }
+        return user_info

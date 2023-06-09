@@ -1,20 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginAdmin } from "../../slices/authAdminSlice";
 import { useNavigate } from "react-router-dom";
 import { Redirect } from 'react-router-dom';
 import axios from "axios";
+import { loginSuccess } from "../../slices/authAdminSlice";
 export default function Login_admin() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+  const authAdmin = useSelector((state) => state.authAdmin);
+  console.log('login', authAdmin)
+  console.log("dispatch", dispatch);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user_info');
+    if (storedUser) {
+      // Đã lưu thông tin người dùng trong localStorage
+      const authAdmin = JSON.parse(storedUser);
+      console.log('login2', authAdmin);
+      dispatch(loginSuccess(authAdmin));
+    }
+  }, []);
   const handleSubmit = async (e) => {
     
     e.preventDefault();
-
     // Kiểm tra điều kiện trước khi gửi yêu cầu đăng nhập
     if (!email || !password) {
       setError('Please provide both email and password.');
