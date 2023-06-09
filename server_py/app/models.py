@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -36,7 +37,15 @@ class Users(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    # Chú ý khai mã hoá phải có hàm giải mã. và đây là mã hoá 1 lần và trong phần đăng ký không cần thêm phương thức mã hoá nữa
+    def set_password(self, raw_password):
+        # Mã hoá mật khẩu một lần
+        encrypted_password = make_password(raw_password)
+        self.password = encrypted_password
+
+    def check_password(self, raw_password):
+        # Giải mã mật khẩu một lần
+        return check_password(raw_password, self.password)
+
     def save(self, *args, **kwargs):
-        if self.password:
-            self.password = make_password(self.password)
         super().save(*args, **kwargs)

@@ -20,13 +20,19 @@ export default function Login_admin() {
       setError('Please provide both email and password.');
       return;
     }
-    dispatch(loginAdmin(email, password))
-      .then(() => {
-        navigate('/admin-panel/home');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    
+    try {
+      const response = await dispatch(loginAdmin(email, password));
+  
+      // Kiểm tra trạng thái phản hồi từ API
+      if (response) {
+        navigate("/admin-panel/home"); // Chuyển hướng nếu không có lỗi
+      } else {
+        setError("Login failed"); // Xử lý lỗi nếu cần
+      }
+    } catch (error) {
+      console.log(error); // Xử lý lỗi trong quá trình gọi action loginAdmin
+    }
   };
   const handleTogglePassword = () => {
     setShowPassword((prevState) => !prevState);

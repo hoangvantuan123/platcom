@@ -29,7 +29,12 @@ export const loginAdmin = (email, password) => async (dispatch) => {
       email,
       password,
     });
-    dispatch(loginSuccess(response.data));
+    if (response.status === 200) {
+      dispatch(loginSuccess(response.data));
+      return response.data; // Trả về dữ liệu nếu cần
+    } else {
+      throw new Error('Login failed');
+    }
   } catch (error) {
     dispatch(loginFailure(error.response.data));
   }
