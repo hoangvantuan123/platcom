@@ -1,4 +1,4 @@
-import React, { useEffect , useState} from "react";
+import React, { useEffect, useState } from "react";
 import Chat_UI from "./components/chat";
 import Frame_UI from "./components/frame_ui";
 import Home_UI from "./components/home";
@@ -9,10 +9,11 @@ import Calendar_UI from "./components/calendar";
 import Login from "./components/acc_user/login";
 import Register_admin from "./low-level-admin/register-admin";
 import Login_admin from "./low-level-admin/login-admin";
-import Home_admin_panel from "./low-level-admin/components-admin-panel";
+import Home_admin_panel from "./low-level-admin/components-admin-panel/home";
 import Frame_UI_admin_panel from "./low-level-admin/components-admin-panel/frame_ui_admin_panel";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Users from "./low-level-admin/components-admin-panel/users";
 /* 
 `Wrapper` để bọc và kiểm soát việc hiển thị của `Frame_UI`.  truyền prop `showForm` vào trong `Wrapper` 
 và sử dụng nó để kiểm soát việc hiển thị của `Frame_UI` và cách margin bên trái cho nội dung.
@@ -83,6 +84,14 @@ function App() {
             element={
               <WrapperAdmins showForm={showForm}>
                 <Home_admin_panel />
+              </WrapperAdmins>
+            }
+          />
+          <Route
+            path="/admin-panel/users"
+            element={
+              <WrapperAdmins showForm={showForm}>
+                <Users />
               </WrapperAdmins>
             }
           />
