@@ -74,7 +74,7 @@ const data = [
     role: "Manager",
   },
 ];
-console.log(data);
+//console.log(data);
 export default function Members() {
   const [visibleMembers, setVisibleMembers] = useState(5); // Số lượng thành viên hiển thị ban đầu
   const [expanded, setExpanded] = useState(false); // Trạng thái hiển thị/ẩn của danh sách

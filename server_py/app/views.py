@@ -47,8 +47,9 @@ class LoginView(APIView):
 
             # Lưu thông tin người dùng vào session
             request.session['user_info'] = user_info
-            print(user_info)
+            #print(user_info)
             # Thực hiện các hành động sau khi xác thực thành công, ví dụ: tạo token truy cập, lưu phiên đăng nhập, vv.
+            # Tạo token người dùng
             print('Đăng nhập thành công')
 
             return Response(user_info)
