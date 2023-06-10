@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+import uuid
+from django.utils import timezone
  # Tạo tài khoản admin quản lý doanh nghiệp 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -48,4 +49,68 @@ class Users(AbstractBaseUser):
         return check_password(raw_password, self.password)
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+
+class UserManagerAccount(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("Email phải được cung cấp bởi doanh nghiệp")
+        
+        email = self.normalize_email(email)
+        username = extra_fields.pop('username', None)  # Lấy giá trị username từ extra_fields
+        user = self.model(email=email, username=username, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+    
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser phải có is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser phải có is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
+
+class UserAccount(AbstractBaseUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=150, unique=True, null=True, blank=True)
+    phone_number = models.CharField(max_length=20)
+    hometown = models.CharField(max_length=100)
+    birth_date = models.DateField()
+    user_status = models.CharField(max_length=50)
+    admin_role = models.BooleanField(default=False)
+    admin_email = models.EmailField()
+    job_title = models.CharField(max_length=100)
+    department = models.CharField(max_length=100)
+    department_abbreviation = models.CharField(max_length=10)
+    department_id = models.CharField(max_length=10)
+    memory_status = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    last_login = models.DateTimeField(null=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    objects = UserManagerAccount()
+
+    def set_password(self, raw_password):
+        # Mã hoá mật khẩu
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        # Kiểm tra mật khẩu
+        return check_password(raw_password, self.password)
+
+    def save(self, *args, **kwargs):
+        if not self.username:
+            # Gán giá trị username từ email của người đăng nhập
+            self.username = self.email.split('@')[0]
+        self.updated_at = timezone.now()
         super().save(*args, **kwargs)

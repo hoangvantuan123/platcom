@@ -48,7 +48,7 @@ export default function Home_admin_panel() {
       <Header_ui_admin />
       <Box sx={{ flexGrow: 1, marginTop: 3 }}>
         <Grid container spacing={2} style={{ height: "100%" }}>
-          <Grid item xs={6} md={6}>
+          <Grid item xs={12} md={6}>
             <div
               style={{ height: "100%" }}
               className="border  rounded-xl "
@@ -56,7 +56,7 @@ export default function Home_admin_panel() {
               xs=6 md=8
             </div>
           </Grid>
-          <Grid item xs={6} md={6}>
+          <Grid item xs={12} md={6}>
             <div
               style={{ height: "100%" }}
               className="border  rounded-xl "
@@ -64,7 +64,7 @@ export default function Home_admin_panel() {
               xs=6 md=8
             </div>
           </Grid>
-          <Grid item xs={6} md={4}>
+          <Grid item xs={12} md={4}>
             <div
               style={{ height: "100%" }}
               className="border  rounded-xl "
@@ -72,7 +72,7 @@ export default function Home_admin_panel() {
               xs=6 md=8
             </div>
           </Grid>
-          <Grid item xs={6} md={8}>
+          <Grid item xs={12} md={8}>
             <div
               style={{ height: "100%" }}
               className="border  rounded-xl "

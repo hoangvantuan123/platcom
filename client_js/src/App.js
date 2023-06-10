@@ -14,6 +14,7 @@ import Frame_UI_admin_panel from "./low-level-admin/components-admin-panel/frame
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Users from "./low-level-admin/components-admin-panel/users";
+import User_account from "./low-level-admin/components-admin-panel/users/user_account";
 /* 
 `Wrapper` để bọc và kiểm soát việc hiển thị của `Frame_UI`.  truyền prop `showForm` vào trong `Wrapper` 
 và sử dụng nó để kiểm soát việc hiển thị của `Frame_UI` và cách margin bên trái cho nội dung.
@@ -92,6 +93,15 @@ function App() {
             element={
               <WrapperAdmins showForm={showForm}>
                 <Users />
+              </WrapperAdmins>
+            }
+          />
+          <Route
+            path="/admin-panel/user_accounts"
+            element={
+              <WrapperAdmins showForm={showForm}>
+                <User_account/>
+                
               </WrapperAdmins>
             }
           />
