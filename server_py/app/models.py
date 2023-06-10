@@ -4,6 +4,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import uuid
 from django.utils import timezone
  # Tạo tài khoản admin quản lý doanh nghiệp 
+
+ # Ở đây sẽ có hai loại tài khoản 
+ # Tài khoản thứ 1: SuperuserAccount : Siêu người dùng 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -19,7 +22,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
-
+ # Tài khoản thứ 1: SuperuserAccount : Siêu người dùng 
 class Users(AbstractBaseUser):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
@@ -52,6 +55,9 @@ class Users(AbstractBaseUser):
         super().save(*args, **kwargs)
 
 
+
+
+# Tài khoản thứ 2: RegularUserAccount : Tài khoản người dùng thông thường
 class UserManagerAccount(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -75,7 +81,7 @@ class UserManagerAccount(BaseUserManager):
             raise ValueError('Superuser phải có is_superuser=True.')
 
         return self.create_user(email, password, **extra_fields)
-
+# Tài khoản thứ 2: RegularUserAccount : Tài khoản người dùng thông thường
 class UserAccount(AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
