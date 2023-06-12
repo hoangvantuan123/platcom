@@ -1,16 +1,23 @@
 from rest_framework import serializers
-from .models import Users
+from .models import Users, UserAccount
 from django.contrib.auth.hashers import check_password
 from django.db import connection
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+import psycopg2
+from sqlalchemy import create_engine
 from sqlalchemy import text
+from django.db import transaction
+import datetime
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = Users
-        fields = ['id', 'username', 'email', 'password', 'domainAddress', 'employeeCount', 'firstName', 'lastName', 'phone', 'emailContact', 'businessAddress', 'created_at', 'updated_at']
+        fields = ['id', 'username', 'email', 'password', 'domainAddress', 'employeeCount', 'firstName',
+                  'lastName', 'phone', 'emailContact', 'businessAddress', 'created_at', 'updated_at']
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -29,6 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
         database_name = f"user_{username}"
         # Thực hiện các câu truy vấn để truy cập vào cơ sở dữ liệu con
 
+
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
@@ -37,15 +45,17 @@ class LoginSerializer(serializers.Serializer):
         email = attrs.get('email')
         password = attrs.get('password')
         # print('password', password)
-        
+
         if email and password:
             user = Users.objects.filter(email=email).first()
             if not user:
-                raise serializers.ValidationError('Email hoặc mật khẩu không chính xác')
-            
+                raise serializers.ValidationError(
+                    'Email hoặc mật khẩu không chính xác')
+
             if not user.check_password(password):
-                raise serializers.ValidationError('Email hoặc mật khẩu không chính xác')
-                
+                raise serializers.ValidationError(
+                    'Email hoặc mật khẩu không chính xác')
+
             # Mật khẩu chính xác, tiếp tục xử lý
             db_name = f"user_{user.username}"
             db_url = f"postgresql://tuanhoang:password@localhost/{db_name}"
@@ -57,21 +67,24 @@ class LoginSerializer(serializers.Serializer):
                 attrs['user'] = user
                 attrs['db_connection'] = 'Kết nối cơ sở dữ liệu thành công'
                 # Tạo bảng trong cơ sở dữ liệu con
-                #with session.begin():
-                    #session.execute(text("""
-                        #CREATE TABLE IF NOT EXISTS my_table (
-                            #id SERIAL PRIMARY KEY,
-                            #name VARCHAR(255) NOT NULL
-                   
-                        #)
-                        #"""))
+                # with session.begin():
+                # session.execute(text("""
+                # CREATE TABLE IF NOT EXISTS my_table (
+                # id SERIAL PRIMARY KEY,
+                # name VARCHAR(255) NOT NULL
+
+                # )
+                # """))
                 # Thêm các câu truy vấn khác tạo bảng và cấu trúc dữ liệu khác trong cơ sở dữ liệu con
                 session.close()
                 return attrs
             else:
-                raise serializers.ValidationError('Không thể kết nối đến cơ sở dữ liệu con')
+                raise serializers.ValidationError(
+                    'Không thể kết nối đến cơ sở dữ liệu con')
         else:
-            raise serializers.ValidationError('Vui lòng cung cấp cả email và mật khẩu')
+            raise serializers.ValidationError(
+                'Vui lòng cung cấp cả email và mật khẩu')
+
     def to_representation(self, instance):
         user = instance['user']
         user_info = {
@@ -81,3 +94,93 @@ class LoginSerializer(serializers.Serializer):
             # Các thông tin khác của tài khoản
         }
         return user_info
+
+
+#  Tài khoản thứ thứ2: Người dùng thông thường
+class UserAccountSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    # Nên để lại để biết đang dùng thuộc tính nào
+    # Để gọi username từ tài khoản siêu người dùng
+    # 
+    class Meta:
+        model = UserAccount
+        fields = ['id', 'email', 'username','database', 'password', 'phone_number', 'hometown', 'birth_date', 'user_status', 'admin_email', 'admin_role',
+                  'job_title', 'department', 'department_abbreviation', 'department_id', 'memory_status', 'created_at', 'updated_at']
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        current_user = self.context['request'].user
+        validated_data['username'] = current_user.username
+
+        # Thay đổi các giá trị dựa trên thông tin cấu hình của bạn
+        dbname = 'user_nasa11'
+        db_user = 'tuanhoang'
+        db_password = 'password'
+        host = 'localhost'
+        port = '5432'
+
+        with transaction.atomic():
+            # Tạo kết nối
+            conn = psycopg2.connect(dbname=dbname, user=db_user,
+                                    password=db_password, host=host, port=port)
+
+            # Tạo đối tượng Cursor để thực thi truy vấn
+            cur = conn.cursor()
+            # Tạo bảng UserAccount nếu chưa tồn tại
+            cur.execute('''
+                CREATE TABLE IF NOT EXISTS app_useraccount (
+                    id UUID PRIMARY KEY,
+                    email VARCHAR(254) UNIQUE,
+                    username VARCHAR(150),
+                    database VARCHAR(150),
+                    password VARCHAR(128),
+                    phone_number VARCHAR(20),
+                    hometown VARCHAR(100),
+                    birth_date DATE,
+                    user_status VARCHAR(50),
+                    admin_role BOOLEAN,
+                    admin_email VARCHAR(254),
+                    job_title VARCHAR(100),
+                    department VARCHAR(100),
+                    department_abbreviation VARCHAR(10),
+                    department_id VARCHAR(10),
+                    memory_status VARCHAR(100),
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+
+            # Tạo đối tượng UserAccount
+            user = UserAccount(**validated_data)
+            user.set_password(password)
+            user.username = current_user.username  # Giữ nguyên giá trị username
+
+            # Lưu thông tin người dùng vào bảng
+            cur.execute('''
+                INSERT INTO app_useraccount (
+                    id, email, username, database, password, phone_number, hometown, birth_date, user_status,
+                    admin_role, admin_email, job_title, department, department_abbreviation,
+                    department_id, memory_status, created_at, updated_at
+                )
+                VALUES (
+                    %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s, %s
+                )
+            ''', (
+                str(user.id), user.email,  user.username, user.database, user.password, user.phone_number, user.hometown, user.birth_date, user.user_status,
+                user.admin_role, user.admin_email, user.job_title, user.department, user.department_abbreviation,
+                user.department_id, user.memory_status, user.created_at, user.updated_at
+            ))
+
+            # Commit các thay đổi vào cơ sở dữ liệu
+            conn.commit()
+
+            # Đóng kết nối
+            cur.close()
+            conn.close()
+         # Lưu dữ liệu vào cơ sở dữ liệu chính của Django
+        user.save()
+
+        return user

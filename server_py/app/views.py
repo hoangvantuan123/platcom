@@ -1,7 +1,7 @@
 ####
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .models import Users
+from .models import Users , UserAccount
 from .serializer import * 
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth.hashers import check_password
 from rest_framework.authtoken.models import Token
 from django.db import connections
+from rest_framework.viewsets import ModelViewSet
 import json
 import uuid
 class HomeView(TemplateView):
@@ -63,3 +64,24 @@ class LoginView(APIView):
             return Response(user_info)
         else:
             return Response({'message': 'User not logged in'}, status=401)
+        
+
+# Tài khoản người dùng thông thường
+
+class UserAccountViewSer(APIView):
+    def post(self, request):
+        serializer = UserAccountSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({'message': 'User registered successfully'})
+        return Response(serializer.errors, status=400)
+        
+class UserAccountCreateView(generics.CreateAPIView):
+    serializer_class = UserAccountSerializer
+
+    def perform_create(self, serializer):
+        password = self.request.data.get('password')
+        current_user = self.request.user
+        username = current_user.username
+
+        serializer.save(password=password, username=username)

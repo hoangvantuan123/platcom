@@ -22,7 +22,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
- # Tài khoản thứ 1: SuperuserAccount : Siêu người dùng 
+# Tài khoản thứ 1: SuperuserAccount : Siêu người dùng 
 class Users(AbstractBaseUser):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
@@ -85,7 +85,8 @@ class UserManagerAccount(BaseUserManager):
 class UserAccount(AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=150, unique=True, null=True, blank=True)
+    username = models.CharField(max_length=150, null=True, blank=True)
+    database = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=20)
     hometown = models.CharField(max_length=100)
     birth_date = models.DateField()
