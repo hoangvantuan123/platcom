@@ -25,7 +25,9 @@ urlpatterns = [
     path("users/<int:pk>/", UserDetails.as_view(), name="user-detail"),
     path('api/register/', UserCreateView.as_view(), name='user-register'),
     path('api/login/', LoginView.as_view(), name='user-login'),
-    path('register/' , UserAccountCreateView.as_view(), name='user')
+    path('register/' , UserAccountCreateView.as_view(), name='user'),
+    path('login/' , LoginUserAccountCreateView.as_view(), name='user-account-login'),
+    path('api/data/', get_data, name='get_data'),
     #
    
 ]

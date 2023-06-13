@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Users from "./low-level-admin/components-admin-panel/users";
 import User_account from "./low-level-admin/components-admin-panel/users/user_account";
+import DataTable_UI from "./low-level-admin/components-admin-panel/pays";
 /* 
 `Wrapper` để bọc và kiểm soát việc hiển thị của `Frame_UI`.  truyền prop `showForm` vào trong `Wrapper` 
 và sử dụng nó để kiểm soát việc hiển thị của `Frame_UI` và cách margin bên trái cho nội dung.
@@ -100,8 +101,15 @@ function App() {
             path="/admin-panel/user_accounts"
             element={
               <WrapperAdmins showForm={showForm}>
-                <User_account/>
-                
+                <User_account />
+              </WrapperAdmins>
+            }
+          />
+          <Route
+            path="/admin-panel/pays"
+            element={
+              <WrapperAdmins showForm={showForm}>
+                <DataTable_UI />
               </WrapperAdmins>
             }
           />

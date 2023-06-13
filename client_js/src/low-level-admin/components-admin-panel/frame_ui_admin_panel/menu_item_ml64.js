@@ -171,7 +171,7 @@ export default function Menu_item_ml64({ isOpen }) {
 
                 <nav aria-label="Teams Nav" className="mt-2 flex flex-col px-4">
                   <a
-                    href="/admin-panel/subscription_package"
+                    href="/admin-panel/pays"
                     className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                   >
                     <svg

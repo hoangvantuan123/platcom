@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../../../../slices/regularUserAccountSlice";
-
+const sexOptions = [
+  { value: "M", label: "Nam" },
+  { value: "F", label: "Nữ" },
+];
 export default function User_account() {
   const dispatch = useDispatch();
   const { useradmin: adminUser } = useSelector((state) => state.authAdmin);
@@ -9,9 +12,12 @@ export default function User_account() {
   console.log("useradmin:", adminUser);
   const [formData, setFormData] = useState({
     email: "",
-    database: adminUser, 
+    database: adminUser,
     username: "N/A",
     password: "",
+    first_name: "",
+    last_name: "",
+    sex: "",
     phone_number: "",
     hometown: "",
     birth_date: "",
@@ -27,7 +33,7 @@ export default function User_account() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     // Check if the field is 'birth_date'
     if (name === "birth_date") {
       // Format the value as 'YYYY-MM-DD'
@@ -40,15 +46,18 @@ export default function User_account() {
       setFormData({ ...formData, [name]: value });
     }
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(createUser(formData));
     // Reset form data
     setFormData({
       email: "",
-      database: adminUser, 
+      database: adminUser,
       username: "N/A",
+      first_name: "",
+      last_name: "",
+      sex: "",
       password: "",
       phone_number: "",
       hometown: "",
@@ -83,6 +92,22 @@ export default function User_account() {
           onChange={handleChange}
           className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
         />
+        <label>first_name:</label>
+        <input
+          type="first_name"
+          name="first_name"
+          value={formData.first_name}
+          onChange={handleChange}
+          className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
+        />
+        <label>last_name:</label>
+        <input
+          type="last_name"
+          name="last_name"
+          value={formData.last_name}
+          onChange={handleChange}
+          className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
+        />
 
         <label>admin_role:</label>
         <input
@@ -92,7 +117,20 @@ export default function User_account() {
           onChange={handleChange}
           className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
         />
-
+        <label>sex:</label>
+        <select
+          name="sex"
+          value={formData.sex}
+          onChange={handleChange}
+          className="w-full rounded-lg border outline-none border-gray-200 p-4 pe-12 text-sm shadow-sm"
+        >
+          <option value="">Chọn giới tính</option>
+          {sexOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
         <label>Password:</label>
         <input
           type="password"

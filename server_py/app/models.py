@@ -82,11 +82,18 @@ class UserManagerAccount(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 # Tài khoản thứ 2: RegularUserAccount : Tài khoản người dùng thông thường
+SEX_CHOICES = (
+    ('M', 'Nam'),
+    ('F', 'Nữ'),
+)
 class UserAccount(AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, null=True, blank=True)
     database = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    sex = models.CharField(max_length=1, choices=SEX_CHOICES)
     phone_number = models.CharField(max_length=20)
     hometown = models.CharField(max_length=100)
     birth_date = models.DateField()
