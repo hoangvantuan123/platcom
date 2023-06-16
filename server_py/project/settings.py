@@ -29,7 +29,9 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',  # Thêm tên miền và cổng của ứng dụng ReactJS vào đây
+]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "app",
     "rest_framework",
+
     "corsheaders",
     'rest_framework.authtoken',
 ]
@@ -46,29 +49,16 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+
 ]
 
-REST_FRAMEWORK ={ "DEFAULT_PERMISSIONS_CLASSES":["rest_framework.permission.AllowAny", 'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',]}
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-
-# Phải thêm thằng này mới mã hoá được mật khẩu thì mới login được vào tài khoản 
-PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
-    'django.contrib.auth.hashers.BCryptPasswordHasher',
-    'django.contrib.auth.hashers.Argon2PasswordHasher',
-]
 
 ROOT_URLCONF = 'project.urls'
 
@@ -104,7 +94,34 @@ DATABASES = {
         'PORT': '5432',  # Cổng PostgreSQL
     }
 }
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1', 'http://127.0.0.1:3000',]
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSIONS_CLASSES":
+    ["rest_framework.permission.AllowAny",
+     'rest_framework.authentication.SessionAuthentication',
+     'rest_framework.renderers.JSONRenderer'
+     ],
+    'DEFAULT_AUTHENTICATION_CLASSES':
+    [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+        
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+}
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
+# Phải thêm thằng này mới mã hoá được mật khẩu thì mới login được vào tài khoản
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -141,6 +158,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

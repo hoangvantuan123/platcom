@@ -62,3 +62,70 @@ class UserAccountSerializer(serializers.ModelSerializer):
       #  kết nối với cơ sở dữ liệu postgsql tương ứng 
 
         return user
+    
+
+
+##################################
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+        
+        if email and password:
+            user = Users.objects.filter(email=email).first()
+            if not user:
+                raise serializers.ValidationError('Email hoặc mật khẩu không chính xác')
+
+            if not user.check_password(password):
+                raise serializers.ValidationError('Email hoặc mật khẩu không chính xác')
+
+            # Mật khẩu chính xác, tiếp tục xử lý
+            db_name = f"user_{user.username}"
+            db_connection = {
+                'dbname': db_name,
+                'user': 'tuanhoang',
+                'password': 'password',
+                'host': 'localhost',
+                'port': '5432',
+            }
+            
+            conn = psycopg2.connect(**db_connection)
+            print('Kết nối cơ sở dữ liệu thành công')
+            
+            cursor = conn.cursor()
+            table_names = []
+            data_from_tables = {}
+
+            cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
+            for row in cursor.fetchall():
+                table_names.append(row[0])
+
+            for table_name in table_names:
+                cursor.execute(f'SELECT * FROM {table_name}')
+                rows = cursor.fetchall()
+                columns = [desc[0] for desc in cursor.description]
+                data = [dict(zip(columns, row)) for row in rows]
+                data_from_tables[table_name] = data
+
+            attrs['user'] = user
+            attrs['data_from_tables'] = data_from_tables
+
+            cursor.close()
+            conn.close()
+            return attrs
+        else:
+            raise serializers.ValidationError('Vui lòng cung cấp cả email và mật khẩu')
+
+    def to_representation(self, instance):
+        user = instance['user']
+        user_info = {
+            'id': str(user.id),
+            'username': user.username,
+            'email': user.email,
+        }
+        if 'data_from_tables' in instance:
+            user_info['data_from_tables'] = instance['data_from_tables']
+        return user_info

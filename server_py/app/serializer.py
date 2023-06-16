@@ -39,6 +39,8 @@ class UserSerializer(serializers.ModelSerializer):
         # Thực hiện các câu truy vấn để truy cập vào cơ sở dữ liệu con
 
 
+
+
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
@@ -59,7 +61,7 @@ class LoginSerializer(serializers.Serializer):
                     'Email hoặc mật khẩu không chính xác')
 
             # Mật khẩu chính xác, tiếp tục xử lý
-            db_name = f"user_{user.username}"
+            db_name = f"user_{user.username.lower()}"
             db_url = f"postgresql://tuanhoang:password@localhost/{db_name}"
             engine = create_engine(db_url)
 
@@ -68,34 +70,7 @@ class LoginSerializer(serializers.Serializer):
             if session.is_active:
                 attrs['user'] = user
                 attrs['db_connection'] = 'Kết nối cơ sở dữ liệu thành công'
-                # Tạo bảng trong cơ sở dữ liệu con
-                # with session.begin():
-                # session.execute(text("""
-                # CREATE TABLE IF NOT EXISTS my_table (
-                # id SERIAL PRIMARY KEY,
-                # name VARCHAR(255) NOT NULL
-
-                # )
-                # """))
-
-                ######################################################
-                # Lấy danh sách các bảng từ cơ sở dữ liệu con
-                metadata = MetaData()
-                metadata.bind = engine
-
-                table_names = metadata.tables.keys()
-                data_from_tables = {}
-
-                with session.connection() as con:
-                    for table_name in table_names:
-                        result = con.execute(f'SELECT * FROM {table_name}')
-                        # Chưa tôi ưu - nếu nhiều người đăng nhập vào và trả về dữ liệu như này chưa tối ưu
-                        # Ghi chú No.01: Để xem các cách khắc phục khi xử lý nhiều yêu cầu
-                        data = [dict(row) for row in result]
-                        data_from_tables[table_name] = data
-
-                attrs['data_from_tables'] = data_from_tables
-                # Thêm các câu truy vấn khác tạo bảng và cấu trúc dữ liệu khác trong cơ sở dữ liệu con
+                
                 session.close()
                 return attrs
             else:
@@ -118,6 +93,7 @@ class LoginSerializer(serializers.Serializer):
         return user_info
 
 
+
 #  Tài khoản thứ thứ2: Người dùng thông thường : Đăng ký ở phía admin
 class UserAccountSerializer(serializers.ModelSerializer):
 
@@ -137,7 +113,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
         # Lấy giá trị database từ dữ liệu đã xác nhận
         database = validated_data.get('database')
         # Thay đổi các giá trị dựa trên thông tin cấu hình của bạn
-        dbname = f"user_{database}"
+        dbname = f"user_{database.lower()}"
         db_user = 'tuanhoang'
         db_password = 'password'
         host = 'localhost'
@@ -239,7 +215,7 @@ class LoginAccountSerializer(serializers.Serializer):
                     'Email hoặc mật khẩu không chính xác')
 
             # Mật khẩu chính xác, tiếp tục xử lý
-            db_name = f"user_{user.data}"
+            db_name = f"user_{user.database.lower()}"
             db_url = f"postgresql://tuanhoang:password@localhost/{db_name}"
             engine = create_engine(db_url)
 
@@ -247,7 +223,7 @@ class LoginAccountSerializer(serializers.Serializer):
             session = Session()
             if session.is_active:
                 attrs['user'] = user
-                attrs['db_connection'] = 'Kết nối cơ sở dữ liệu thành công'
+                attrs['db_connection'] = f"Kết nối cơ sở dữ liệu thành công: {user.database}"
                 # Tạo bảng trong cơ sở dữ liệu con
                 # with session.begin():
                 # session.execute(text("""

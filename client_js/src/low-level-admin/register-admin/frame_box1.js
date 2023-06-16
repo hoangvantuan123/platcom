@@ -12,9 +12,21 @@ export default function Frame_box1({
   employeeCount,
   username,
 }) {
-  
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+    const inputValue = e.target.value;
+
+    // Xóa dấu tiếng Việt
+    const strippedValue = inputValue
+      .toLowerCase()
+      .replace(/đ/g, "d")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    // Xóa khoảng trắng và chuyển thành dạng không dấu
+    const sanitizedValue = strippedValue.replace(/\s+/g, "");
+
+    // Cập nhật giá trị
+    setUsername(sanitizedValue);
   };
   const handleDomainAddressChange = (e) => {
     setDomainAddress(e.target.value);

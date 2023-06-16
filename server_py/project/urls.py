@@ -17,18 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from app.views import *
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    re_path(r"^$",HomeView.as_view(), name="home"),
+    # re_path(r"^$", HomeView.as_view(), name="home"),
     path("users/", UserList.as_view(), name="user-list"),
     path("users/<int:pk>/", UserDetails.as_view(), name="user-detail"),
     path('api/register/', UserCreateView.as_view(), name='user-register'),
-    path('api/login/', LoginView.as_view(), name='user-login'),
-    path('register/' , UserAccountCreateView.as_view(), name='user'),
-    path('login/' , LoginUserAccountCreateView.as_view(), name='user-account-login'),
-    path('api/data/', get_data, name='get_data'),
-    #
-   
-]
+    path('accounts/login/', LoginView.as_view(), name='user-login'),
+    path('register/', UserAccountCreateView.as_view(), name='user'),
+    path('login/', LoginUserAccountCreateView.as_view(), name='user-account-login'),
+    # Giải mã token 
+    path('api/token/database/', tokenDatabase, name='token-database'), 
+    # Các URL khác của ứng dụng của bạn...
 
+    #
+
+]

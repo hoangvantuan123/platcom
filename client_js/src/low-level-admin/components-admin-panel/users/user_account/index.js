@@ -7,9 +7,10 @@ const sexOptions = [
 ];
 export default function User_account() {
   const dispatch = useDispatch();
-  const { useradmin: adminUser } = useSelector((state) => state.authAdmin);
+  const { useradmin: adminUser , data: Data} = useSelector((state) => state.authAdmin);
 
   console.log("useradmin:", adminUser);
+  console.log("data:", Data);
   const [formData, setFormData] = useState({
     email: "",
     database: adminUser,

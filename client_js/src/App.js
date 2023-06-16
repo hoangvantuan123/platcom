@@ -13,9 +13,9 @@ import Home_admin_panel from "./low-level-admin/components-admin-panel/home";
 import Frame_UI_admin_panel from "./low-level-admin/components-admin-panel/frame_ui_admin_panel";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Users from "./low-level-admin/components-admin-panel/users";
 import User_account from "./low-level-admin/components-admin-panel/users/user_account";
-import DataTable_UI from "./low-level-admin/components-admin-panel/pays";
+import Users from "./low-level-admin/components-admin-panel/users";
+import Pays_UI from "./low-level-admin/components-admin-panel/pays";
 /* 
 `Wrapper` để bọc và kiểm soát việc hiển thị của `Frame_UI`.  truyền prop `showForm` vào trong `Wrapper` 
 và sử dụng nó để kiểm soát việc hiển thị của `Frame_UI` và cách margin bên trái cho nội dung.
@@ -35,7 +35,7 @@ const Wrapper = React.memo(({ children, showForm }) => {
   );
 });
 const WrapperAdmins = React.memo(({ children, showForm }) => {
-  const { useradmin: adminUser } = useSelector((state) => state.authAdmin);
+  const token = useSelector((state) => state.authAdmin.token);
   const navigate = useNavigate();
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -43,7 +43,7 @@ const WrapperAdmins = React.memo(({ children, showForm }) => {
 
   useEffect(() => {
     // Kiểm tra tính hợp lệ của adminUser
-    const hasAdminUser = adminUser !== null && adminUser !== undefined;
+    const hasAdminUser = token !== null && token !== undefined;
 
     // Nếu adminUser không hợp lệ, chuyển hướng đến trang login
     if (!hasAdminUser) {
@@ -51,7 +51,7 @@ const WrapperAdmins = React.memo(({ children, showForm }) => {
     } else {
       setShouldRender(true);
     }
-  }, [adminUser, navigate]);
+  }, [token, navigate]);
 
   useEffect(() => {
     // Cập nhật khi showFormadmin thay đổi
@@ -97,6 +97,7 @@ function App() {
               </WrapperAdmins>
             }
           />
+
           <Route
             path="/admin-panel/user_accounts"
             element={
@@ -109,7 +110,7 @@ function App() {
             path="/admin-panel/pays"
             element={
               <WrapperAdmins showForm={showForm}>
-                <DataTable_UI />
+                <Pays_UI />
               </WrapperAdmins>
             }
           />

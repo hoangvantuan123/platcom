@@ -1,74 +1,194 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllData } from "../../../slices/dataSlice";
-import { DataGrid } from "@mui/x-data-grid";
-const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "first_name", headerName: "First name", width: 130 },
-  { field: "last_name", headerName: "Last name", width: 130 },
-  {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    width: 90,
-  },
-  {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-  },
-];
+import { fetchData, selectData } from "../../../slices/dataSlice";
+import { Checkbox, Badge, Dropdown, Space, Table } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import Header_Users from "./header";
 
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
+const items = [
+  { key: "1", label: "Action 1" },
+  { key: "2", label: "Action 2" },
 ];
 
 export default function Users() {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.data.data);
-  const isLoading = useSelector((state) => state.data.isLoading);
-  const error = useSelector((state) => state.data.error);
-  console.log("data", data);
+  const token = useSelector((state) => state.authAdmin.token);
+  const data = useSelector(selectData);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [isSelectAll, setIsSelectAll] = useState(false);
+  const [expandedRows, setExpandedRows] = useState([]);
+  const [expandedData, setExpandedData] = useState({});
+  const [userState, setUserState] = useState(null);
+
   useEffect(() => {
-    dispatch(fetchAllData());
+    if (token) {
+      dispatch(fetchData(token));
+    }
   }, [dispatch]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (data) {
+      setUserState(data.app_useraccount); // Gán giá trị data vào userState
+    }
+  }, [data]);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-  return (
-    <div className=" ml-64 p-5">
-      {data && data.length > 0 ? (
-        <DataGrid
-          rows={data}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-          checkboxSelection
+  console.log("userstae", userState);
+  useEffect(() => {
+    if (userState && userState.length > 0) {
+      if (isSelectAll) {
+        const allRowKeys = userState.map((record) => record.id);
+        setSelectedRowKeys(allRowKeys);
+      } else {
+        setSelectedRowKeys([]);
+      }
+    }
+  }, [isSelectAll, userState]);
+
+  /// Dùng để hiển thị bảng  expandedColumns
+  const handleRowSelectionData = (record) => {
+    if (expandedData[record.id]) {
+      const updatedExpandedData = { ...expandedData };
+      delete updatedExpandedData[record.id];
+      setExpandedData(updatedExpandedData);
+    } else {
+      setExpandedData({ ...expandedData, [record.id]: true });
+    }
+  };
+
+  const expandedColumns = [
+    { title: "ID", dataIndex: "id", key: "id" },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (_, record) => `${record.first_name} ${record.last_name}`,
+    },
+
+    {
+      title: "Updated At",
+      dataIndex: "updated_at",
+      key: "updated_at",
+    },
+    {
+      title: "Action",
+      key: "operation",
+      render: (_, record) => (
+        <Space size="middle">
+          <a onClick={() => handleRowSelection(record)}>Publish</a>
+          <a>Pause</a>
+          <a>Stop</a>
+          <Dropdown menu={{ items }}>
+            <a>
+              More <DownOutlined />
+            </a>
+          </Dropdown>
+        </Space>
+      ),
+    },
+  ];
+  const expandedRowRender = (record) => {
+    if (expandedData[record.id]) {
+      return (
+        <Table
+          columns={expandedColumns}
+          dataSource={[record]}
+          pagination={false}
         />
-      ) : (
-        <div>No data available.</div>
-      )}
+      );
+    }
+    return null;
+  };
+  // Lựa chọn tất cả các ô
+
+  // Hiển  thị toàn bộ ô chọn
+  //console.log(selectedRowKeys)
+  // Lựa chọn từng ô
+  const handleRowSelection = (record) => {
+    const selectedKeys = [...selectedRowKeys];
+    const index = selectedKeys.indexOf(record.id);
+
+    if (index === -1) {
+      selectedKeys.push(record.id);
+    } else {
+      selectedKeys.splice(index, 1);
+    }
+
+    setSelectedRowKeys(selectedKeys);
+    console.log(selectedKeys);
+  };
+
+  // Dùng để show ra dòng được bấm
+  const handleExpand = (expanded, record) => {
+    if (expanded) {
+      setExpandedRows((prevExpandedRows) => [...prevExpandedRows, record.id]);
+    } else {
+      setExpandedRows((prevExpandedRows) =>
+        prevExpandedRows.filter((rowId) => rowId !== record.id)
+      );
+    }
+  };
+
+  const handleSelectAll = (e) => {
+    setIsSelectAll(e.target.checked);
+  };
+
+  const columns = [
+    {
+      title: (
+        <Checkbox
+          checked={selectedRowKeys.length === data?.length}
+          indeterminate={
+            selectedRowKeys.length > 0 &&
+            selectedRowKeys.length < (data?.length || 0)
+          }
+          onChange={handleSelectAll}
+        />
+      ),
+      dataIndex: "checkbox",
+      key: "checkbox",
+      render: (_, record) => (
+        <Checkbox
+          checked={selectedRowKeys.includes(record.id)}
+          onChange={() => handleRowSelection(record)}
+        />
+      ),
+    },
+    { title: "Email", dataIndex: "email", key: "email" },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (_, record) => `${record.first_name} ${record.last_name}`,
+    },
+    { title: "Phone", dataIndex: "phone_number", key: "phone_number" },
+    {
+      title: "Memory Status",
+      dataIndex: "memory_status",
+      key: "memory_status",
+    },
+    {
+      title: "Action",
+      dataIndex: "user_status",
+      key: "user_status",
+      render: (text, record) => (
+        <Badge status="success" text={record.user_status} />
+      ),
+    },
+  ];
+  
+  return (
+    <div className="ml-64 p-4">
+      <Header_Users />
+      <Table
+        className="mt-4"
+        columns={columns}
+        rowKey="id"
+        expandedRowRender={expandedRowRender}
+        onExpand={(_, record) => handleRowSelectionData(record)}
+        dataSource={userState}
+        size="middle"
+      />
     </div>
   );
 }

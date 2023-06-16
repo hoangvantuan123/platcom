@@ -117,7 +117,7 @@ export default function Register_admin() {
         alert("Đăng ký thành công!");
         // Chuyển hướng đến trang mới
         requestSuccess = true;
-        navigate("/new-page");
+        navigate("/admin/admin-panel/login");
         // Đánh dấu yêu cầu thành công
       }
     } catch (error) {
