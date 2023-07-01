@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Users, UserAccount
+from .models import Users, UserAccount , Message
 from django.contrib.auth.hashers import check_password
 from django.db import connection
 from sqlalchemy import create_engine, MetaData
@@ -39,8 +39,6 @@ class UserSerializer(serializers.ModelSerializer):
         # Thực hiện các câu truy vấn để truy cập vào cơ sở dữ liệu con
 
 
-
-
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
@@ -70,7 +68,7 @@ class LoginSerializer(serializers.Serializer):
             if session.is_active:
                 attrs['user'] = user
                 attrs['db_connection'] = 'Kết nối cơ sở dữ liệu thành công'
-                
+
                 session.close()
                 return attrs
             else:
@@ -91,7 +89,6 @@ class LoginSerializer(serializers.Serializer):
         if 'data_from_tables' in instance:
             user_info['data_from_tables'] = instance['data_from_tables']
         return user_info
-
 
 
 #  Tài khoản thứ thứ2: Người dùng thông thường : Đăng ký ở phía admin
@@ -247,8 +244,12 @@ class LoginAccountSerializer(serializers.Serializer):
         user = instance['user']
         user_info = {
             'id': str(user.id),
-            'username': user.username,
+            'database': user.database,
             'email': user.email,
             # Các thông tin khác của tài khoản
         }
+        # return user_info  chỉ chứa các thông tin trong user_info
+        if 'data_from_tables' in instance:
+            user_info['data_from_tables'] = instance['data_from_tables']
         return user_info
+

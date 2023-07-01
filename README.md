@@ -49,13 +49,18 @@ Ngoài ra, còn một số yếu tố khác cần xem xét như cấu trúc cơ 
 
 
 
- {data &&
-        data.map((item) => (
-          <div key={item.id}>
-            {/* Hiển thị dữ liệu từ mỗi bản ghi */}
-            <p>{item.admin_email}</p>
-            {/* Thêm các trường dữ liệu khác tùy thuộc vào cấu trúc dữ liệu */}
-          </div>
-        ))}
+# No.02
+- Sử dụng DèaultRouter và router.register()
+- Đây là một cách nhanh và gọn để đăng ký các viwset và xác định các đường dẫn tương ứng. Nó giúp giảm bớt việc lặp lại và tự động tạo ra các đường dẫn 
+RESTful cho các tài nguyên.
+
+Tuy nhiên, nếu bạn muốn sử dụng path để định nghĩa từng đường dẫn một, điều đó cũng hoàn toàn khả thi và phổ biến. Nó cho phép bạn có kiểm soát tốt hơn về cấu trúc đường dẫn và phương thức xử lý tương ứng.
+
+Cả hai cách tiếp cận đều có nhược điểm và lợi ích của riêng chúng. Lựa chọn giữa hai phụ thuộc vào yêu cầu cụ thể của dự án của bạn và sự ưu tiên của bạn với sự tiện lợi, linh hoạt hoặc độ chính xác trong việc định nghĩa đường dẫn và xử lý view.
+
+Nếu bạn quan tâm đến việc giảm thiểu mã lặp lại và tự động tạo ra các đường dẫn RESTful, sử dụng DefaultRouter và router.register() là một lựa chọn tốt. Nếu bạn muốn kiểm soát cấu trúc đường dẫn và phương thức xử lý một cách chi tiết hơn, bạn có thể sử dụng path để định nghĩa từng đường dẫn một.
+
+- Nếu sử dụng Reactjs và Redux, việc sử dụng DefaultRouter và router.register() có thể đem lại lợi ích lớn. Điều này cho phép Django tự động tạo ra các đường dẫn RESTful cho tài nguyên của bạn, giúp giảm thiểu công việc lặp lại và giúp việc tương tác với API dễ dàng hơn. Bạn có thể sử dụng các thư viện HTTP như Axios để thực hiện các yêu cầu HTTP từ phía frontend của bạn và Redux Toolkit để quản lý trạng thái ứng dụng.
 
 
+curl -X POST -H "Content-Type: application/json" -d '{"sender": "c6984ef5-cb7b-4379-afdc-5a1254c2524e", "content": "Nội dung tin nhắn"}' http://localhost:8000/messages/

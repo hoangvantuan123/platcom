@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from app.views import *
 from django.views.generic import TemplateView
-
+from . import routing
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,10 +29,12 @@ urlpatterns = [
     path('accounts/login/', LoginView.as_view(), name='user-login'),
     path('register/', UserAccountCreateView.as_view(), name='user'),
     path('login/', LoginUserAccountCreateView.as_view(), name='user-account-login'),
-    # Giải mã token 
-    path('api/token/database/', tokenDatabase, name='token-database'), 
-    # Các URL khác của ứng dụng của bạn...
+    # Giải mã token
+    path('api/token/database/', tokenDatabase, name='token-database'),
+    path('api/token/database/user/message/',
+         tokenDatabaseUserAccountMess, name='token-database-message'),
+    # CHAT...
+    path('api/messages/', message_list, name='message_list'),
 
-    #
 
 ]

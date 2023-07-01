@@ -2,7 +2,7 @@
 import psycopg2
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .models import Users, UserAccount
+from .models import Users, UserAccount , Message
 from .serializer import *
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
@@ -13,10 +13,10 @@ from django.contrib.auth.hashers import check_password
 from rest_framework.authtoken.models import Token
 from django.db import connections
 from rest_framework.viewsets import ModelViewSet
+from rest_framework import viewsets, status
 import json
 import uuid
 from django.http import QueryDict
-from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from psycopg2 import Error
 from django.views.generic.base import View
@@ -28,6 +28,9 @@ from rest_framework.authentication import TokenAuthentication
 import logging
 from rest_framework.permissions import IsAuthenticated
 import sys
+# Chat
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 class HomeView(TemplateView):
@@ -50,7 +53,7 @@ class UserDetails(generics.RetrieveUpdateDestroyAPIView):
 
 # Giair mã token
 
-
+# Đoạn mã dùng cho admin người dùng
 @api_view(['POST'])
 def tokenDatabase(request):
     data = request.data.get('text')  # Lấy dữ liệu từ request
@@ -103,15 +106,13 @@ def tokenDatabase(request):
         print("Không thể giải mã JWT")
     return Response('Success')
 
-
-
 class LoginView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
 
         if serializer.is_valid():
             user = serializer.validated_data['user']
-
+            print("User" , user)
             user_serializer = UserSerializer(user)
             user_info = user_serializer.data
 
@@ -126,54 +127,11 @@ class LoginView(APIView):
 
     def get(self, request):
         user_info = request.session.get('user_info')
-        print("user_info 2", user_info)
+
         if user_info:
-            user_info_decoded = jwt.decode(
-                user_info, 'SECRET_KEY', algorithms=['HS256'])
-            username = user_info_decoded.get('username')
-            db_name = f"user_{username}"
-            print("db_name", db_name)
-            """  db_name = f"user_{username}"
-            print("db_name", db_name)
-            db_connection = {
-                'dbname': db_name,
-                'user': 'tuanhoang',
-                'password': 'password',
-                'host': 'localhost',
-                'port': '5432',
-            }
-            try:
-                conn = psycopg2.connect(**db_connection)
-                cursor = conn.cursor()
-
-                table_names = []
-                data_from_tables = {}
-
-                # Thực hiện truy vấn để lấy dữ liệu từ bảng tương ứng
-                cursor.execute(
-                    "SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
-                for row in cursor.fetchall():
-                    table_names.append(row[0])
-
-                for table_name in table_names:
-                    cursor.execute(f'SELECT * FROM {table_name}')
-                    rows = cursor.fetchall()
-                    columns = [desc[0] for desc in cursor.description]
-                    data = [dict(zip(columns, map(str, row))) for row in rows]
-                    data_from_tables[table_name] = data
-
-                # Chuyển đổi dữ liệu thành JSON
-                json_data = json.dumps(data_from_tables)
-                data = json.loads(json_data)
-                cursor.close()
-                conn.close()
-
-                return Response(data)
-
-            except Exception as e:
-                return Response({'message': f'Lỗi kết nối cơ sở dữ liệu: {str(e)}'}, status=500) """
+            return Response(user_info)
         else:
-            return Response({'message': 'Người dùng chưa đăng nhập hoi cham '}, status=401)
+            return Response({'message': 'User not logged in'}, status=401)
 
     """ def get(self, request):
         login_checker = LoginChecker()
@@ -183,7 +141,6 @@ class LoginView(APIView):
             return Response(user_info)
         else:
             return Response({'message': 'Người dùng chưa đăng nhập'}, status=401) """
-
 
 # Tài khoản người dùng thông thường """
 class UserAccountCreateView(generics.CreateAPIView):
@@ -206,31 +163,99 @@ class LoginUserAccountCreateView(APIView):
 
         if serializer.is_valid():
             user = serializer.validated_data['user']
-            db_connection = serializer.validated_data.get('db_connection')
-
-            if db_connection == 'Kết nối cơ sở dữ liệu thành công':
-                # Thực hiện các hành động sau khi kết nối cơ sở dữ liệu thành công
-                print('Kết nối cơ sở dữ liệu thành công')
+            print("User" , user)
+           
 
             # Sử dụng serializer mới để chuyển đổi đối tượng user thành JSON
-            user_serializer = UserSerializer(user)
-            user_info = user_serializer.data
+            user_serializer = UserAccountSerializer(user)
+            user_account_info = user_serializer.data
 
-            # Lưu thông tin người dùng vào session
-            request.session['user_info'] = user_info
-            # print(user_info)
-            # Thực hiện các hành động sau khi xác thực thành công, ví dụ: tạo token truy cập, lưu phiên đăng nhập, vv.
-            # Tạo token người dùng
-            print('Đăng nhập thành công')
+            print("user_account_info" , user_account_info)
+            # Mã hoá user_info thành token
+            token = jwt.encode(user_account_info, 'SECRET_KEY', algorithm='HS256')
+            #print('Đăng nhập thành công')
 
-            return Response(user_info)
+            request.session['user_account_info'] = token
+
+            return Response({'token': token})
 
         return Response(serializer.errors, status=400)
 
     def get(self, request):
-        user_info = request.session.get('user_info')
+        user_account_info = request.session.get('user_account_info')
 
-        if user_info:
-            return Response(user_info)
+        if user_account_info:
+            return Response(user_account_info)
         else:
             return Response({'message': 'User not logged in'}, status=401)
+
+
+# Đoạn mã dùng cho phía người dùng 
+# Lấy thông tin token từ phía người dùng để xử lý và truy cập vào database tương ứng 
+
+@api_view(['POST'])
+def tokenDatabaseUserAccountMess(request):
+    data = request.data.get('text')  # Lấy dữ liệu từ request
+    # Xử lý dữ liệu và thực hiện các tác vụ mong muốn
+    # print(data)
+
+    try:
+        decoded_token = jwt.decode(data, 'SECRET_KEY', algorithms=['HS256'])
+        print(decoded_token)
+        database = decoded_token.get('database')
+        db_name = f"user_{database.lower()}"
+        print(db_name)
+        db_connection = {
+            'dbname': db_name,
+            'user': 'tuanhoang',
+            'password': 'password',
+            'host': 'localhost',
+            'port': '5432',
+        }
+        try:
+            conn = psycopg2.connect(**db_connection)
+            cursor = conn.cursor()
+
+            cursor.execute(
+                "SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
+            table_names = [row[0] for row in cursor.fetchall()]
+
+            data_from_tables = {}
+
+            for table_name in table_names:
+                cursor.execute(f'SELECT * FROM {table_name}')
+                rows = cursor.fetchall()
+                columns = [desc[0] for desc in cursor.description]
+                data = [dict(zip(columns, map(str, row))) for row in rows]
+                data_from_tables[table_name] = data
+
+            json_data = json.dumps(data_from_tables)
+            data = json.loads(json_data)
+
+            cursor.close()
+            conn.close()
+
+            return Response(data)
+
+        except Exception as e:
+            return Response({'message': f'Lỗi kết nối cơ sở dữ liệu: {str(e)}'}, status=500)
+
+    except jwt.DecodeError:
+        # Xử lý lỗi khi không thể giải mã JWT
+        print("Không thể giải mã JWT")
+    return Response('Success')
+
+
+
+# Chat functions
+@csrf_exempt
+def message_list(request):
+    if request.method == 'GET':
+        messages = Message.objects.all().order_by('created_at')
+        data = [{'text': message.text, 'created_at': message.created_at} for message in messages]
+        return JsonResponse(data, safe=False)
+    
+    elif request.method == 'POST':
+        text = request.POST.get('text', '')
+        message = Message.objects.create(text=text)
+        return JsonResponse({'id': message.id, 'text': message.text, 'created_at': message.created_at})

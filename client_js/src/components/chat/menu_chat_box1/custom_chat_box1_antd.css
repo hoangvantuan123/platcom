@@ -38,4 +38,11 @@
   margin-right: 8px;
 }
 
+.ant-menu-item[style*="padding-left"] {
+  padding-left: 25px !important;
+}
+
+
+
+
 

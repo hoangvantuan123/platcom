@@ -55,8 +55,6 @@ class Users(AbstractBaseUser):
         super().save(*args, **kwargs)
 
 
-
-
 # Tài khoản thứ 2: RegularUserAccount : Tài khoản người dùng thông thường
 class UserManagerAccount(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -128,3 +126,10 @@ class UserAccount(AbstractBaseUser):
             self.username = self.email.split('@')[0]
         self.updated_at = timezone.now()
         super().save(*args, **kwargs)
+
+class Message(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+

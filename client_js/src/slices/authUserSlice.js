@@ -1,16 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { urlAPI } from "../services_api";
-const storedUser = localStorage.getItem("user_info");
-const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+import { isExpired, decodeToken } from "react-jwt";
+
+// Giải mã token
+const getDecodedToken_User = () => {
+  const datatoken_user = JSON.parse(localStorage.getItem("user_account_info"))?.token;
+  if (datatoken_user) {
+    const myDecodedToken = decodeToken(datatoken_user);
+    const isMyTokenExpired = isExpired(datatoken_user);
+    //console.log('decodedToken', myDecodedToken);
+    return { myDecodedToken, isMyTokenExpired };
+  } else {
+    // Handle the case when the token is null
+    console.log("Token is null");
+    return { myDecodedToken: null, isMyTokenExpired: false };
+  }
+};
+
+const decodedToken = getDecodedToken_User().myDecodedToken;
+const email = decodedToken ? decodedToken.email : null;
 
 const initialState = {
-  useradmin: parsedUser && parsedUser.username ? parsedUser.username : null,
+  useradmin: decodedToken ? decodedToken.database : null,
   error: null,
-  token: JSON.parse(localStorage.getItem("user_info")),
-  user: null,
+  token: JSON.parse(localStorage.getItem("user_account_info"))?.token || null,
+  user: email,
   // xem tai khoan nguoi dung da tai hay chua +> de trang false de ve trang thai ban dau
   userLoaded: false,
+  database: null,
+  datatoken_user: decodedToken || null,
 };
 
 const authUserSlice = createSlice({
@@ -18,11 +37,13 @@ const authUserSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action) => {
-      state.useradmin = JSON.parse(localStorage.getItem("user_info")).username;
-      state.user = action.payload.user_info;
-      state.token = JSON.parse(localStorage.getItem("user_info"));
+      const { database, token } = action.payload;
+      state.useradmin = database;
+      state.user = action.payload.user_account_info;
+      state.token = token;
       state.error = null;
       state.userLoaded = true;
+      window.location.href = "/";
     },
     loginFailure: (state, action) => {
       state.useradmin = null;
@@ -35,7 +56,7 @@ const authUserSlice = createSlice({
       state.user = null;
       state.token = null;
       state.error = null;
-      localStorage.removeItem("user_info");
+      localStorage.removeItem("user_account_info");
       window.location.href = "/"; // Thay đổi URL để thực hiện điều hướng đến trang đăng nhập
     },
   },
@@ -51,17 +72,16 @@ export const loginUser = (email, password) => async (dispatch) => {
     });
     if (response.status === 200) {
       // lưu thông tin người dùng và localstoage
-      localStorage.setItem("user_info", JSON.stringify(response.data));
-      const storedUser = localStorage.getItem("user_info");
+      localStorage.setItem("user_account_info", JSON.stringify(response.data));
+      const storedUser = localStorage.getItem("user_account_info");
       if (storedUser) {
         // Đã lưu thông tin người dùng trong localStorage
-        const authAdmin = JSON.parse(storedUser);
-        const token = authAdmin.token;
+        const authUser = JSON.parse(storedUser);
+        const token = authUser.token;
         //console.log("login3", authAdmin);
-        dispatch(loginSuccess(authAdmin));
-       
+        dispatch(loginSuccess(authUser));
       }
-      dispatch(loginSuccess(response.data));  
+      dispatch(loginSuccess(response.data));
       return response.data; // Trả về dữ liệu nếu cần
     } else {
       throw new Error("Login failed");

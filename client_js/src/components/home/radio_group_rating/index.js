@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
@@ -8,9 +9,9 @@ import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
-import Clock from "../clock";
-import "./css/style.css"
 
+import Clock from "../clock";
+import "./css/style.css";
 const StyledRating = styled(Rating)(({ theme }) => ({
   "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
     color: theme.palette.action.disabled,
@@ -53,14 +54,17 @@ IconContainer.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function RadioGroupRating( ) {
-
-
+export default function RadioGroupRating() {
+  const dispatch = useDispatch();
+  const datatoken_user = useSelector((state) => state.authUser.datatoken_user);
+  //console.log("data_token" , datatoken_user)
+  const user_name  = datatoken_user.first_name + " " +  datatoken_user.last_name 
+  //console.log("user_name" , user_name)
   return (
     <div className="w-full h-full flex flex-col justify-between ">
       <div>
         <Box className="mb-2 copy-protection">
-          <h2  >👋 Hey Tuan,</h2>
+          <h2>👋 Hey {user_name},</h2>
           <Typography sx={{ fontSize: "12px" }}>
             How are you footing today?
           </Typography>

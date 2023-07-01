@@ -3,12 +3,14 @@ import axios from "axios";
 import { urlAPI } from "../services_api";
 import { isExpired, decodeToken } from "react-jwt";
 
+
+// Giải mã token 
 const getDecodedToken = () => {
   const datatoken = JSON.parse(localStorage.getItem("user_info"))?.token;
   if (datatoken) {
     const myDecodedToken = decodeToken(datatoken);
     const isMyTokenExpired = isExpired(datatoken);
-    console.log('decodedToken', myDecodedToken);
+    //console.log('decodedToken', myDecodedToken);
     return { myDecodedToken, isMyTokenExpired };
   } else {
     // Handle the case when the token is null
@@ -104,16 +106,6 @@ export const loginAdmin = (email, password) => async (dispatch) => {
   }
 };
 
-export const fetchData = createAsyncThunk(
-  "authAdmin/getAuthAdmin",
-  async () => {
-    try {
-      const response = await axios.get(`${urlAPI}/accounts/login/`);
-      return response.data;
-    } catch (error) {
-      throw error.response.data;
-    }
-  }
-);
+
 // Tự động gọi hàm sendDataToBackend khi khởi tạo slice
 export default authAdminSlice.reducer;

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchData } from "../../../slices/authAdminSlice";
 import {
   logout,
   loginAdmin,
@@ -35,9 +34,7 @@ export default function Home_admin_panel() {
   console.log("user:", User);
   console.log("token:", Token);
  */
-  useEffect(() => {
-    dispatch(fetchData());
-  }, [dispatch]);
+ 
 
   const handleLogout = () => {
     dispatch(logout());

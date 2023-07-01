@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
 
-export default function File_UI() {
+function File_UI() {
+  
   return (
-    <div>File_UI</div>
-  )
+    <div className="chat-container ml-64">
+    
+    </div>
+  );
 }
+
+export default File_UI;

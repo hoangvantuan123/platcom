@@ -28,10 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',  # Thêm tên miền và cổng của ứng dụng ReactJS vào đây
-]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,11 +38,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "app",
     "rest_framework",
-
     "corsheaders",
     'rest_framework.authtoken',
+    'channels',
 ]
 
+# Note
+# Cấu hình Django Channels
+ASGI_APPLICATION = 'project.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+    },
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,6 +66,14 @@ MIDDLEWARE = [
     #
 
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',  # Thay đổi thành nguồn của ứng dụng frontend của bạn
+]
+
+
 
 
 ROOT_URLCONF = 'project.urls'
@@ -94,7 +110,8 @@ DATABASES = {
         'PORT': '5432',  # Cổng PostgreSQL
     }
 }
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1', 'http://127.0.0.1:3000',]
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com',
+                        'https://*.127.0.0.1', 'http://127.0.0.1:3000',]
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSIONS_CLASSES":
     ["rest_framework.permission.AllowAny",
@@ -105,14 +122,13 @@ REST_FRAMEWORK = {
     [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication'
-        
+
     ],
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
 }
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+
 
 # Phải thêm thằng này mới mã hoá được mật khẩu thì mới login được vào tài khoản
 PASSWORD_HASHERS = [
@@ -157,8 +173,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = '/static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -1,58 +1,89 @@
-import React, { useState } from "react";
-import { Badge, Space } from "antd";
+import React, { useState, useEffect } from "react";
 import {
-  CheckCircleOutlined,
-  ExclamationCircleOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
+  fetchDataUserNumbers,
+  selectData,
+} from "../../../slices/userNumberSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { Menu, Input } from "antd";
 import "./custom_chat_box1_antd.css";
 import Header_chat from "./header_chat";
-const items = [
-  { type: "divider" },
-  {
-    key: "sub1",
-    add_children: "",
-    label: "Starred",
-    children: [
-      {
-        key: "g1",
-        label: "Item 1",
-        type: "group",
-        iconStatus: "#",
-      },
-      {
-        key: "g2",
-        label: "Item 2",
-        type: "group",
-        iconStatus: "#",
-      },
-    ],
-  },
-  {
-    key: "sub2",
-    add_children: "",
-    label: "Channels",
-    children: [
-      { key: "5", iconStatus: "#", label: "Option 5" },
-      { key: "6", iconStatus: "#", label: "Option 6" },
-    ],
-  },
-  {
-    key: "sub3",
-    add_children: "",
-    label: "Direct Messages",
-
-    children: [
-      { key: "9", iconStatus: "online", label: "Option 9" },
-      { key: "10", iconStatus: "offline", label: "Option 10" },
-      { key: "11", iconStatus: "online", label: "Option 11" },
-      { key: "12", iconStatus: "offline", label: "Option 12" },
-    ],
-  },
-];
 
 export default function Menu_chat_box1() {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.authUser.token);
+  //console.log("user_token", token);
+  const data = useSelector(selectData);
+  const [userState, setUserState] = useState("");
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchDataUserNumbers(token));
+    }
+  }, [dispatch]);
+  useEffect(() => {
+    if (data) {
+      setUserState(data.app_useraccount); // Gán giá trị data vào userState
+    }
+  }, [data]);
+
+  //console.log(userState);
+
+  useEffect(() => {
+    const newItems = [
+      { type: "divider" },
+      {
+        key: "sub1",
+        add_children: "",
+        label: "Starred",
+        children: [
+          {
+            key: "g1",
+            label: "Item 1",
+            type: "group",
+            iconStatus: "#",
+          },
+          {
+            key: "g2",
+            label: "Item 2",
+            type: "group",
+            iconStatus: "#",
+          },
+        ],
+      },
+      {
+        key: "sub2",
+        add_children: "",
+        label: "Channels",
+        children: [
+          { key: "5", iconStatus: "#", label: "Option 5" },
+          { key: "6", iconStatus: "#", label: "Option 6" },
+        ],
+      },
+    ];
+
+    if (userState) {
+      const userItems = userState.map((user) => {
+        const { id, first_name, last_name, user_status } = user; // Trích xuất giá trị từ đối tượng user trong mảng userState
+        return {
+          key: id,
+          iconStatus: user_status,
+          label: first_name + "" + last_name,
+        };
+      });
+
+      newItems.push({
+        key: "sub3",
+        add_children: "",
+        label: "Direct Messages",
+        children: userItems,
+      });
+    }
+
+    setItems(newItems);
+  }, [userState]);
+
+  //console.log(items);
+
   const onClick = (e) => {
     if (e.key === "newItem") {
     } else {
@@ -161,7 +192,7 @@ export default function Menu_chat_box1() {
           href=""
           className="flex items-center gap-2 rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
         >
-            <svg
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             version="1.1"

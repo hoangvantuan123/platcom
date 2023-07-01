@@ -3,7 +3,6 @@ import Chat_UI from "./components/chat";
 import Frame_UI from "./components/frame_ui";
 import Home_UI from "./components/home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Job_UI from "./components/job";
 import File_UI from "./components/file";
 import Calendar_UI from "./components/calendar";
 import Login from "./components/acc_user/login";
@@ -16,6 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import User_account from "./low-level-admin/components-admin-panel/users/user_account";
 import Users from "./low-level-admin/components-admin-panel/users";
 import Pays_UI from "./low-level-admin/components-admin-panel/pays";
+import Job_UI_app from "./components/job";
+
 /* 
 `Wrapper` để bọc và kiểm soát việc hiển thị của `Frame_UI`.  truyền prop `showForm` vào trong `Wrapper` 
 và sử dụng nó để kiểm soát việc hiển thị của `Frame_UI` và cách margin bên trái cho nội dung.
@@ -134,7 +135,7 @@ function App() {
             path="/tasks"
             element={
               <Wrapper showForm={showForm}>
-                <Job_UI />
+                <Job_UI_app></Job_UI_app>
               </Wrapper>
             }
           />
@@ -142,7 +143,7 @@ function App() {
             path="/files"
             element={
               <Wrapper showForm={showForm}>
-                <File_UI />
+                  <File_UI />
               </Wrapper>
             }
           />
