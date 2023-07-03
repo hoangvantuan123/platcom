@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { urlAPI } from "../services_api";
 import { isExpired, decodeToken } from "react-jwt";
@@ -17,6 +17,23 @@ const getDecodedToken_User = () => {
     return { myDecodedToken: null, isMyTokenExpired: false };
   }
 };
+
+export const fetchDataUserNumbers = createAsyncThunk("authUser/fetchDataUserNumbers", async (token) => {
+  try {
+    const response = await fetch(`${urlAPI}/api/token/logout/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: token }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw Error("Error fetching data");
+  }
+});
 
 const decodedToken = getDecodedToken_User().myDecodedToken;
 const email = decodedToken ? decodedToken.email : null;
@@ -56,7 +73,10 @@ const authUserSlice = createSlice({
       state.user = null;
       state.token = null;
       state.error = null;
+      state.lastLogout = new Date(); // Cập nhật giá trị lastLogout
       localStorage.removeItem("user_account_info");
+      // Xoá token ở localstore
+      // ...
       window.location.href = "/"; // Thay đổi URL để thực hiện điều hướng đến trang đăng nhập
     },
   },
@@ -90,5 +110,7 @@ export const loginUser = (email, password) => async (dispatch) => {
     dispatch(loginFailure(error.response.data));
   }
 };
+
+
 
 export default authUserSlice.reducer;

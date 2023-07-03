@@ -29,12 +29,17 @@ urlpatterns = [
     path('accounts/login/', LoginView.as_view(), name='user-login'),
     path('register/', UserAccountCreateView.as_view(), name='user'),
     path('login/', LoginUserAccountCreateView.as_view(), name='user-account-login'),
+    path('logout/', logout_view, name='logout'),
     # Giải mã token
     path('api/token/database/', tokenDatabase, name='token-database'),
     path('api/token/database/user/message/',
          tokenDatabaseUserAccountMess, name='token-database-message'),
+    path('api/token/logout/', token_logout, name='token-database'),
     # CHAT...
     path('api/messages/', message_list, name='message_list'),
+    path('create-group/', create_group),
+    path('add-member/<str:group_id>/', add_member),
+    path('send-message-group/<str:group_id>/', send_message),
 
 
 ]

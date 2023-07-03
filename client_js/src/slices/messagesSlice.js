@@ -1,5 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { urlAPI } from "../services_api";
+
+export const fetchDataUserNumbers = createAsyncThunk("chat/fetchDataUserNumbers", async (token) => {
+  try {
+    const response = await fetch(`${urlAPI}/api/token/logout/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: token }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw Error("Error fetching data");
+  }
+});
 export const fetchMessages = createAsyncThunk('chat/fetchMessages', async () => {
   const response = await fetch('http://localhost:8000/api/messages/');
   const data = await response.json();

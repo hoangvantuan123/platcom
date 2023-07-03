@@ -6,9 +6,35 @@ import Header_right_info_channels from "./box_channels/header_right_info_channel
 import Textareas_UI from "./box_channels/textareas_chat";
 import "./css/style.css";
 import Content_Chat from "./box_channels/content_chat";
-export default function Chat_box2() {
+export default function Chat_box2({ items, clickedItem }) {
+  //console.log("clickedItem", clickedItem);
+  //console.log("Items chat box2", items);
   const [showSubscreen, setShowSubscreen] = useState(true);
   const [mainScreenCollapsed, setMainScreenCollapsed] = useState(true);
+  const [foundItem, setFoundItem] = useState(null);
+
+  // Kiểm tra key có trùng trong items(data)
+  const handleCheckKey = () => {
+    if (clickedItem && items) {
+      for (const item of items) {
+        if (item.children && Array.isArray(item.children)) {
+          const found = item.children.find((child) => child.key === clickedItem.key);
+
+          if (found) {
+            setFoundItem(found);
+            break;
+          }
+        }
+      }
+    }
+  };
+
+  // Gọi hàm handleCheckKey khi clickedItem hoặc items thay đổi
+  React.useEffect(() => {
+    handleCheckKey();
+  }, [clickedItem, items]);
+
+  //console.log('foundItem', foundItem);
 
   const toggleSubscreen = () => {
     setShowSubscreen(!showSubscreen);
@@ -27,7 +53,7 @@ export default function Chat_box2() {
             onClick={toggleSubscreen}
             className="w-5 h-12  absolute -left-3 top-3 p-2 text-gray-600 border  rounded-md bg-gray-50 hover:bg-gray-100 hover:text-gray-700"
           >
-         {/*    <svg
+            {/*    <svg
               xmlns="http://www.w3.org/2000/svg"
               id="Outline"
               viewBox="0 0 24 24"
@@ -79,7 +105,7 @@ export default function Chat_box2() {
           </div>
           <div className=" overflow-y-auto scroll-container">
             <div className="h-screen p-4 overflow-auto scrollable-content overflow-y-auto scroll-container ">
-            <Content_Chat/>
+              <Content_Chat />
             </div>
           </div>
           <div className="scroll-container p-6">

@@ -8,8 +8,8 @@ import { Menu, Input } from "antd";
 import "./custom_chat_box1_antd.css";
 import Header_chat from "./header_chat";
 
-export default function Menu_chat_box1() {
-  const dispatch = useDispatch();
+export default function Menu_chat_box1({items, onClick}) {
+ /*  const dispatch = useDispatch();
   const token = useSelector((state) => state.authUser.token);
   //console.log("user_token", token);
   const data = useSelector(selectData);
@@ -80,16 +80,11 @@ export default function Menu_chat_box1() {
     }
 
     setItems(newItems);
-  }, [userState]);
+  }, [userState]); */
 
   //console.log(items);
 
-  const onClick = (e) => {
-    if (e.key === "newItem") {
-    } else {
-      console.log("Click ", e);
-    }
-  };
+  
   const renderIcon = (iconStatus) => {
     if (iconStatus === "online") {
       return <div class="w-2 h-2 rounded-full bg-green-500"></div>;

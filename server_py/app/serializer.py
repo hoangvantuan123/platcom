@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Users, UserAccount , Message
+from .models import Users, UserAccount, Message
 from django.contrib.auth.hashers import check_password
 from django.db import connection
 from sqlalchemy import create_engine, MetaData
@@ -11,6 +11,7 @@ from sqlalchemy import text
 from django.db import transaction
 import datetime
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth import logout
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -103,7 +104,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
         fields = ['id', 'email', 'username', 'database', 'first_name', 'last_name', 'sex', 'password', 'phone_number', 'hometown', 'birth_date', 'user_status', 'admin_email', 'admin_role',
-                  'job_title', 'department', 'department_abbreviation', 'department_id', 'memory_status', 'created_at', 'updated_at']
+                  'job_title', 'department', 'department_abbreviation', 'department_id', 'memory_status', 'created_at', 'updated_at', 'last_login', 'last_logout']
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -153,7 +154,9 @@ class UserAccountSerializer(serializers.ModelSerializer):
                     department_id VARCHAR(10),
                     memory_status VARCHAR(100),
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    last_login TIMESTAMP NULL,
+                    last_logout TIMESTAMP NULL
                 )
             ''')
 
@@ -166,17 +169,17 @@ class UserAccountSerializer(serializers.ModelSerializer):
                 INSERT INTO app_useraccount (
                     id, email, username, database,first_name,last_name, sex,  password, phone_number, hometown, birth_date, user_status,
                     admin_role, admin_email, job_title, department, department_abbreviation,
-                    department_id, memory_status, created_at, updated_at
+                    department_id, memory_status, created_at, updated_at, last_login, last_logout
                 )
                 VALUES (
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
                     %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s, %s, %s
                 )
             ''', (
                 str(user.id), user.email, user.username,  user.database, user.first_name, user.last_name, user.sex, user.password, user.phone_number, user.hometown, user.birth_date, user.user_status,
                 user.admin_role, user.admin_email, user.job_title, user.department, user.department_abbreviation,
-                user.department_id, user.memory_status, user.created_at, user.updated_at
+                user.department_id, user.memory_status, user.created_at, user.updated_at , user.last_login, user.last_logout
             ))
 
             # Commit các thay đổi vào cơ sở dữ liệu
@@ -190,28 +193,38 @@ class UserAccountSerializer(serializers.ModelSerializer):
 
         return user
 
+    def logout(self, instance):
+        instance.logout()
+
+    def update(self, instance, validated_data):
+        self.logout(instance)
+        return super().update(instance, validated_data)
+    
 
 # Tài khoản thứ 2: Đăng nhập ở phía client
 class LoginAccountSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
+    last_login = serializers.DateTimeField(read_only=True)
 
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
-        # print('password', password)
 
         if email and password:
             user = UserAccount.objects.filter(email=email).first()
             if not user:
-                raise serializers.ValidationError(
-                    'Email hoặc mật khẩu không chính xác')
+                raise serializers.ValidationError('Email hoặc mật khẩu không chính xác')
 
             if not user.check_password(password):
-                raise serializers.ValidationError(
-                    'Email hoặc mật khẩu không chính xác')
+                raise serializers.ValidationError('Email hoặc mật khẩu không chính xác')
 
-            # Mật khẩu chính xác, tiếp tục xử lý
+            if user.last_logout:
+                raise serializers.ValidationError('Tài khoản đã đăng xuất')
+
+            # Cập nhật thời gian last_login
+            user.update_last_login()
+
             db_name = f"user_{user.database.lower()}"
             db_url = f"postgresql://tuanhoang:password@localhost/{db_name}"
             engine = create_engine(db_url)
@@ -221,24 +234,12 @@ class LoginAccountSerializer(serializers.Serializer):
             if session.is_active:
                 attrs['user'] = user
                 attrs['db_connection'] = f"Kết nối cơ sở dữ liệu thành công: {user.database}"
-                # Tạo bảng trong cơ sở dữ liệu con
-                # with session.begin():
-                # session.execute(text("""
-                # CREATE TABLE IF NOT EXISTS my_table (
-                # id SERIAL PRIMARY KEY,
-                # name VARCHAR(255) NOT NULL
-
-                # )
-                # """))
-                # Thêm các câu truy vấn khác tạo bảng và cấu trúc dữ liệu khác trong cơ sở dữ liệu con
                 session.close()
                 return attrs
             else:
-                raise serializers.ValidationError(
-                    'Không thể kết nối đến cơ sở dữ liệu con')
+                raise serializers.ValidationError('Không thể kết nối đến cơ sở dữ liệu con')
         else:
-            raise serializers.ValidationError(
-                'Vui lòng cung cấp cả email và mật khẩu')
+            raise serializers.ValidationError('Vui lòng cung cấp cả email và mật khẩu')
 
     def to_representation(self, instance):
         user = instance['user']
@@ -246,10 +247,9 @@ class LoginAccountSerializer(serializers.Serializer):
             'id': str(user.id),
             'database': user.database,
             'email': user.email,
-            # Các thông tin khác của tài khoản
+            'last_login': user.last_login,
+            'last_logout': user.last_logout,
         }
-        # return user_info  chỉ chứa các thông tin trong user_info
         if 'data_from_tables' in instance:
             user_info['data_from_tables'] = instance['data_from_tables']
         return user_info
-

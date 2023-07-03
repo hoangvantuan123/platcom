@@ -22,18 +22,37 @@ import Job_UI_app from "./components/job";
 và sử dụng nó để kiểm soát việc hiển thị của `Frame_UI` và cách margin bên trái cho nội dung.
 Trong các routes `Login` và `Register`, chỉ cần chuyển giá trị `false` cho prop `showForm` để ẩn `Frame_UI`. */
 const Wrapper = React.memo(({ children, showForm }) => {
+  const token = useSelector((state) => state.authUser.token);
+  const navigate = useNavigate();
+  const [shouldRender, setShouldRender] = useState(false);
+
+  //console.log("useradmin:", adminUser);
+
+  useEffect(() => {
+    // Kiểm tra tính hợp lệ của adminUser
+    const hasUser = token !== null && token !== undefined;
+
+    // Nếu adminUser không hợp lệ, chuyển hướng đến trang login
+    if (!hasUser) {
+      navigate("/login");
+    } else {
+      setShouldRender(true);
+    }
+  }, [token, navigate]);
+
   useEffect(() => {
     // Cập nhật khi showForm thay đổi
   }, [showForm]);
+ 
 
-  return (
+  return shouldRender ? (
     <>
-      {showForm && <Frame_UI />}
+      {showForm &&  <Frame_UI />}
       <div className={` transition-all duration-300 ${showForm ? "" : ""}`}>
         {children}
       </div>
     </>
-  );
+  ) : null;
 });
 const WrapperAdmins = React.memo(({ children, showForm }) => {
   const token = useSelector((state) => state.authAdmin.token);

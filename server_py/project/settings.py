@@ -28,7 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,9 +45,21 @@ INSTALLED_APPS = [
 # Note
 # Cấu hình Django Channels
 ASGI_APPLICATION = 'project.routing.application'
-CHANNEL_LAYERS = {
+""" CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+    },
+} """
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Backend sử dụng In-memory
+        'CONFIG': {},
+    },
+    'redis': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',  # Backend sử dụng Redis
         'CONFIG': {
             'hosts': [('localhost', 6379)],
         },
@@ -72,8 +83,6 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',  # Thay đổi thành nguồn của ứng dụng frontend của bạn
 ]
-
-
 
 
 ROOT_URLCONF = 'project.urls'

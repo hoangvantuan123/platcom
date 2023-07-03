@@ -3,6 +3,8 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import uuid
 from django.utils import timezone
+from django.contrib.auth.models import User
+
  # Tạo tài khoản admin quản lý doanh nghiệp 
 
  # Ở đây sẽ có hai loại tài khoản 
@@ -106,6 +108,7 @@ class UserAccount(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(null=True)
+    last_logout = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -126,10 +129,54 @@ class UserAccount(AbstractBaseUser):
             self.username = self.email.split('@')[0]
         self.updated_at = timezone.now()
         super().save(*args, **kwargs)
+    
+    def update_last_login(self):
+        # Cập nhật thời gian last_login khi đăng nhập thành công
+        self.last_login = timezone.now()
+        self.save()
 
+    #  Chưa dùng đến vì không thể xử lý tính xác thực 
+    def update_last_logout(self):
+        # Cập nhật thời gian last_logout khi logout
+        self.last_logout = timezone.now()
+        self.save()
+    #  Chưa dùng đến vì không thể xử lý tính xác thực 
+    def logout(self):
+        # Cập nhật thời gian last_logout khi tài khoản logout
+        self.update_last_logout()
+
+########################################################################
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.TextField()
+    sender_id = models.TextField()
+    receiver_id = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Message {self.id}'
+    
+#
+class ChatGroup(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=255)
+    members = models.JSONField(default=list)
+
+    def add_member(self, user_id):
+        self.members.append(user_id)
+        self.save()
+
+    def remove_member(self, user_id):
+        self.members.remove(user_id)
+        self.save()
+
+
+class ChatMessageGroup(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    group = models.ForeignKey(ChatGroup, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    sender_id = models.UUIDField(default=uuid.uuid4, editable=False)
+
 
 
