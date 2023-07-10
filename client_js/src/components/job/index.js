@@ -1,68 +1,40 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchMessages,
-  addMessage,
-  selectMessages,
-} from "../../slices/messagesSlice";
-import { logout } from "../../slices/authUserSlice";
-import { fetchDataUserNumbers } from "../../slices/authUserSlice";
-export default function Job_UI_app({ items }) {
-  console.log("item test " , items)
-  const dispatch = useDispatch();
-  const messages = useSelector(selectMessages);
-  const messageInputRef = useRef();
-  const token = useSelector((state) => state.authUser.token);
-  console.log(messages);
-  /*  useEffect(() => {
-    if (token) {
-      dispatch(fetchDataUserNumbers(token));
-    }
-  }, [dispatch]); */
-  const handleLogout = async () => {
-    if (token) {
-      try {
-        await dispatch(fetchDataUserNumbers(token));
-        dispatch(logout());
-      } catch (error) {
-        console.log("Error fetching data", error);
-      }
-    }
-  };
+import { sendMessage, fetchAndListenForMessages } from "../../slices/messagesSlice";
 
+export default function Job_UI_app() {
+  const dispatch = useDispatch();
+  const messages = useSelector((state) => state.chat.messages);
+  
   useEffect(() => {
-    dispatch(fetchMessages());
+    dispatch(fetchAndListenForMessages());
   }, [dispatch]);
 
-  const handleSend = () => {
-    const text = messageInputRef.current.value.trim();
-    if (text) {
-      dispatch(addMessage(text));
-      messageInputRef.current.value = "";
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Lấy dữ liệu từ form
+    const messageData = {
+      content: e.target.message.value,
+      sender_id: 'e5faa672-6d94-4d5d-a73b-8af46425312a',
+      receiver_id: 'e5faa672-6d89-4d5d-a73b-8af46425312',
+    };
+    dispatch(sendMessage(messageData));
+    // rest lại input
+    e.target.reset();
   };
 
   return (
     <div className="ml-64">
-      <button
-        onClick={handleLogout}
-        className=" w-24 h-24 bg-slate-50 text-slate-950"
-      >
-        Logout
-      </button>
-      <h1>Real-time Chat Application</h1>
+      <h1>Real-time Chat</h1>
       <ul>
-        {messages.map((message) => (
-          <li key={message.id}>
-            <span>{message.text}</span>
-            <span>{message.created_at}</span>
-          </li>
+        {messages.map((message, index) => (
+          <li key={index}>{message}</li>
         ))}
       </ul>
-      <div>
-        <input type="text" ref={messageInputRef} className=" border " />
-        <button onClick={handleSend}>Send</button>
-      </div>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="message" placeholder="Enter message" required />
+        <button type="submit">Send</button>
+      </form>
     </div>
   );
 }

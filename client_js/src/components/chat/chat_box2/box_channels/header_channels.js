@@ -2,7 +2,8 @@ import React from "react";
 const url_img =
   "https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80";
 
-export default function Header_channels() {
+export default function Header_channels({foundItem}) {
+  console.log("foundItemfoundItem",foundItem)
   const avatars = [
     { src: "https://xsgames.co/randomusers/avatar.php?g=pixel&key=1", alt: "Remy Sharp" },
     { src: "https://xsgames.co/randomusers/avatar.php?g=pixel&key=2", alt: "Travis Howard" },
@@ -22,7 +23,9 @@ export default function Header_channels() {
     <div className=" px-4 flex items-center justify-between pt-2 pb-2 border-b">
       <div>
         <div>
-          <h3 className="text-lg opacity-80"># Box Channels</h3>
+          <h3 className="text-lg opacity-80"># &nbsp;
+         { foundItem.label}
+          </h3>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center gap-2">

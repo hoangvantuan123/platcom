@@ -7,11 +7,11 @@ import Textareas_UI from "./box_channels/textareas_chat";
 import "./css/style.css";
 import Content_Chat from "./box_channels/content_chat";
 export default function Chat_box2({ items, clickedItem }) {
-  //console.log("clickedItem", clickedItem);
+  console.log("clickedItem", clickedItem);
   //console.log("Items chat box2", items);
   const [showSubscreen, setShowSubscreen] = useState(true);
   const [mainScreenCollapsed, setMainScreenCollapsed] = useState(true);
-  const [foundItem, setFoundItem] = useState(null);
+  const [foundItem, setFoundItem] = useState("");
 
   // Kiểm tra key có trùng trong items(data)
   const handleCheckKey = () => {
@@ -34,7 +34,7 @@ export default function Chat_box2({ items, clickedItem }) {
     handleCheckKey();
   }, [clickedItem, items]);
 
-  //console.log('foundItem', foundItem);
+  console.log('foundItem', foundItem);
 
   const toggleSubscreen = () => {
     setShowSubscreen(!showSubscreen);
@@ -101,11 +101,11 @@ export default function Chat_box2({ items, clickedItem }) {
             </button>
           )}
           <div className=" top-0 ">
-            <Header_channels />
+            <Header_channels  foundItem={foundItem}/>
           </div>
           <div className=" overflow-y-auto scroll-container">
             <div className="h-screen p-4 overflow-auto scrollable-content overflow-y-auto scroll-container ">
-              <Content_Chat />
+              <Content_Chat foundItem={foundItem} />
             </div>
           </div>
           <div className="scroll-container p-6">

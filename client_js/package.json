@@ -37,15 +37,16 @@
     "react-dom": "^18.2.0",
     "react-jwt": "^1.2.0",
     "react-line-clamp": "^1.2.6",
-    "react-redux": "^8.0.7",
+    "react-redux": "^8.1.1",
     "react-router-dom": "^6.11.2",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.3",
     "react-websocket": "^2.1.0",
+    "redux": "^4.2.1",
+    "redux-saga": "^1.2.3",
     "socket.io-client": "^4.7.0",
     "styled-components": "^5.3.11",
-    "web-vitals": "^2.1.4",
-    "websocket": "^1.0.34"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start ",

@@ -37,12 +37,14 @@ export const fetchDataUserNumbers = createAsyncThunk("authUser/fetchDataUserNumb
 
 const decodedToken = getDecodedToken_User().myDecodedToken;
 const email = decodedToken ? decodedToken.email : null;
+const id_user = decodedToken ? decodedToken.id : null;
 
 const initialState = {
   useradmin: decodedToken ? decodedToken.database : null,
   error: null,
   token: JSON.parse(localStorage.getItem("user_account_info"))?.token || null,
   user: email,
+  id_user : id_user,
   // xem tai khoan nguoi dung da tai hay chua +> de trang false de ve trang thai ban dau
   userLoaded: false,
   database: null,

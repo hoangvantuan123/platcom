@@ -1,69 +1,67 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import io from 'socket.io-client';
+import axios from 'axios';
 
-import { urlAPI } from "../services_api";
+const socket = io('http://localhost:5000'); // Thay đổi URL tùy theo địa chỉ backend
 
-export const fetchDataUserNumbers = createAsyncThunk("chat/fetchDataUserNumbers", async (token) => {
-  try {
-    const response = await fetch(`${urlAPI}/api/token/logout/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text: token }),
-    });
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw Error("Error fetching data");
-  }
-});
-export const fetchMessages = createAsyncThunk('chat/fetchMessages', async () => {
-  const response = await fetch('http://localhost:8000/api/messages/');
-  const data = await response.json();
-  console.log(data)
-  return data;
-});
-
-export const addMessage = createAsyncThunk('chat/addMessage', async (text) => {
-  const response = await fetch('http://localhost:8000/api/messages/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `text=${encodeURIComponent(text)}`,
-  });
-  const data = await response.json();
-  return data;
-});
-
+// Tạo slice cho chat
 const chatSlice = createSlice({
   name: 'chat',
   initialState: {
-    messages: [],
-    status: 'idle',
-    error: null,
+    messages: [], // Trạng thái ban đầu, danh sách tin nhắn rỗng
   },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchMessages.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchMessages.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.messages = action.payload;
-      })
-      .addCase(fetchMessages.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(addMessage.fulfilled, (state, action) => {
-        state.messages.push(action.payload);
-      });
+  reducers: {
+    // Action để thiết lập danh sách tin nhắn
+    setMessages: (state, action) => {
+      state.messages = action.payload; // Gán danh sách tin nhắn mới
+    },
+    // Action để thêm tin nhắn vào danh sách
+    addMessage: (state, action) => {
+      const { message } = action.payload; // Lấy tin nhắn từ action payload
+      const isMessageExist = state.messages.some((msg) => msg === message); // Kiểm tra xem tin nhắn đã tồn tại trong danh sách hay chưa
+
+      if (!isMessageExist) {
+        state.messages.push(message); // Thêm tin nhắn vào danh sách nếu chưa tồn tại
+      }
+    },
   },
 });
 
-export const selectMessages = (state) => state.chat.messages;
+// Xuất các action từ slice
+export const { setMessages, addMessage } = chatSlice.actions;
 
+// Action để gửi tin nhắn
+export const sendMessage = (message) => (dispatch) => {
+  socket.emit('chat message', message); // Gửi tin nhắn tới backend thông qua socket
+};
+
+// Action để xử lý việc nhận tin nhắn từ server
+export const receiveMessage = (message) => (dispatch) => {
+  dispatch(addMessage({ message })); // Thêm tin nhắn vào danh sách thông qua action addMessage
+};
+
+// Action để lắng nghe tin nhắn từ server
+export const listenForMessages = () => (dispatch) => {
+  socket.on('chat message', (message) => {
+    dispatch(receiveMessage(message)); // Nhận tin nhắn từ server thông qua socket và xử lý bằng action receiveMessage
+  });
+};
+
+// Action để lấy danh sách tin nhắn từ backend
+export const fetchMessages = () => async (dispatch) => {
+  try {
+    const response = await axios.get('http://localhost:5000/api/messages'); // Gửi yêu cầu GET để lấy danh sách tin nhắn từ backend
+    dispatch(setMessages(response.data)); // Cập nhật danh sách tin nhắn trong state thông qua action setMessages
+  } catch (error) {
+    console.error('Error fetching messages', error);
+  }
+};
+
+// Action để thực hiện lắng nghe và lấy danh sách tin nhắn từ backend
+export const fetchAndListenForMessages = () => (dispatch) => {
+  dispatch(fetchMessages()); // Gọi action fetchMessages để lấy danh sách tin nhắn từ backend
+  dispatch(listenForMessages()); // Gọi action listenForMessages để lắng nghe tin nhắn từ server
+};
+
+// Reducer của slice
 export default chatSlice.reducer;
