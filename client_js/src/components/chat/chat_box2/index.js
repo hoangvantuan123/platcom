@@ -109,7 +109,7 @@ export default function Chat_box2({ items, clickedItem }) {
             </div>
           </div>
           <div className="scroll-container p-6">
-            <Textareas_UI />
+            <Textareas_UI foundItem={foundItem}/>
           </div>
         </div>
       </div>

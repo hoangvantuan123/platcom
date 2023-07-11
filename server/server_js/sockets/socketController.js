@@ -23,10 +23,10 @@ const handleConnection = (socket) => {
         const savedMessage = results.rows[0];
 
         // Gửi tin nhắn đến người gửi
-        socket.emit("chat message", savedMessage.content);
+        socket.emit("chat message", savedMessage);
 
         // Gửi tin nhắn đến tất cả người dùng khác
-        socket.broadcast.emit("chat message", savedMessage.content);
+        socket.broadcast.emit("chat message", savedMessage);
       }
     );
   });

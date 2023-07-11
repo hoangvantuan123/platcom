@@ -28,7 +28,10 @@ const getMessages = (req, res) => {
         .status(500)
         .json({ error: "An error occurred while retrieving messages" });
     } else {
-      const messages = results.rows.map((row) => row.content);
+      // Lấy toàn bộ dự liệu 
+      const messages = results.rows;
+      // Lấy dữ liệu ở cột content
+      //const messages = results.rows.map((row) => row.content);
       res.json(messages);
     }
   });

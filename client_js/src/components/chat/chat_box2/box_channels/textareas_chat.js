@@ -1,8 +1,18 @@
 import React, { useState } from "react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-
-export default function Textareas_UI() {
+// Messages
+import { useSelector, useDispatch } from "react-redux";
+import {
+  sendMessage,
+  fetchAndListenForMessages,
+} from "../../../../slices/messagesSlice";
+export default function Textareas_UI({ foundItem }) {
+  const dispatch = useDispatch();
+  const messages = useSelector((state) => state.chat.messages);
+  //Lấy id_user của tài khoản
+  const id_user = useSelector((state) => state.authUser.id_user);
+  console.log("text", id_user);
   const [comment, setComment] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [emoji, setEmoji] = useState("");
@@ -11,13 +21,24 @@ export default function Textareas_UI() {
   const handleChange = (event) => {
     setComment(event.target.value);
   };
-
   const handleSubmit = (event) => {
     event.preventDefault();
+    // Cấu hình chat
+    // Lấy dữ liệu từ form
+    const messageData = {
+      content: event.target.message.value,
+      sender_id: id_user,
+      receiver_id: foundItem.key,
+    };
+    // Reset lại input
+    event.target.reset();
+    dispatch(sendMessage(messageData));
+
+    /////
     // TODO: Xử lý logic để gửi comment đi
-    console.log("Comment:", comment + emoji);
-    setComment("");
-    setEmoji("");
+    // console.log("Comment:", comment + emoji);
+    
+   
   };
 
   const handleToggleEmojiPicker = () => {
@@ -38,9 +59,8 @@ export default function Textareas_UI() {
           <div>
             <input
               type="text"
-              placeholder="Add a comment!"
-              value={displayComment}
-              onChange={handleChange}
+              name="message"
+              placeholder="Add a Messages!"
               className="w-full h-15  font-normal text-sm outline-none  "
             />
           </div>
