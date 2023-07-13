@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import io from 'socket.io-client';
 import axios from 'axios';
+import { URL_API_CHAT } from '../services_api';
 
-const socket = io('http://localhost:5000'); // Thay đổi URL tùy theo địa chỉ backend
+const socket = io(`${URL_API_CHAT}`); // Thay đổi URL tùy theo địa chỉ backend
 
 // Tạo slice cho chat
 const chatSlice = createSlice({
@@ -50,7 +51,7 @@ export const listenForMessages = () => (dispatch) => {
 // Action để lấy danh sách tin nhắn từ backend
 export const fetchMessages = () => async (dispatch) => {
   try {
-    const response = await axios.get('http://localhost:5000/api/messages'); // Gửi yêu cầu GET để lấy danh sách tin nhắn từ backend
+    const response = await axios.get(`${URL_API_CHAT}/api/messages`); // Gửi yêu cầu GET để lấy danh sách tin nhắn từ backend
     dispatch(setMessages(response.data)); // Cập nhật danh sách tin nhắn trong state thông qua action setMessages
   } catch (error) {
     console.error('Error fetching messages', error);

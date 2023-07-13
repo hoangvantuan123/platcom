@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  fetchDataUserNumbers,
-  selectData,
-} from "../../slices/userNumberSlice";
+import { fetchDataUserNumbers, selectData } from "../../slices/userNumberSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import Menu_chat_box1 from "./menu_chat_box1";
@@ -11,7 +8,9 @@ import Chat_box2 from "./chat_box2";
 const ChatUI = React.memo(() => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.authUser.token);
+  const id_user = useSelector((state) => state.authUser.id_user);
   const data = useSelector(selectData);
+  //console.log("data", data);
   const [userState, setUserState] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [items, setItems] = useState([]);
@@ -25,10 +24,13 @@ const ChatUI = React.memo(() => {
 
   useEffect(() => {
     if (data) {
-      setUserState(data.app_useraccount);
+      const filterDataUser = data.app_useraccount.filter(
+        (item) => item.id !== id_user
+      );
+      setUserState(filterDataUser);
     }
   }, [data]);
-
+  console.log("userState " , userState)
   useEffect(() => {
     const newItems = [
       { type: "divider" },
@@ -83,9 +85,8 @@ const ChatUI = React.memo(() => {
     setItems(newItems);
   }, [userState]);
 
- 
   const onClick = (e) => {
-    if (e.key  === "newItem") {
+    if (e.key === "newItem") {
     } else {
       //console.log("Click ", e);
       setClickedItem(e);

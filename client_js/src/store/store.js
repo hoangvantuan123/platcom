@@ -7,6 +7,7 @@ import authUserReducer from "../slices/authUserSlice";
 import dataReducer from "../slices/dataSlice";
 import dataUserNumbersReducer from "../slices/userNumberSlice";
 import chatReducer from "../slices/messagesSlice";
+import groupChatReducer from "../slices/groupChatSlice";
 const store = configureStore({
   reducer: {
     user: userReducer,
@@ -16,6 +17,7 @@ const store = configureStore({
     data: dataReducer,
     datausernumbers: dataUserNumbersReducer,
     chat: chatReducer,
+    group: groupChatReducer,
   },
   
 });
